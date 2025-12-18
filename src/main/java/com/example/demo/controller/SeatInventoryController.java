@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import com.example.demo.model.SeatInventoryRecord;
-import com.example.demo.service.impl.SeatInventoryServiceImpl;
+import com.example.demo.service.impl.SeatInventoryServiceimpl;
 
 @RestController
 @RequestMapping("/api/inventory")

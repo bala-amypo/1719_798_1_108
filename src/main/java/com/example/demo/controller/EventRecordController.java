@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import com.example.demo.model.EventRecord;
-import com.example.demo.service.impl.EventRecordServiceImpl;
+import com.example.demo.service.impl.EventRecordServiceimpl;
 
 @RestController
 @RequestMapping("/api/events")

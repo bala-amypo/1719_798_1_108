@@ -4,7 +4,7 @@ import java.util.List;
 import org.springframework.web.bind.annotation.*;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import com.example.demo.model.PricingRule;
-import com.example.demo.service.impl.PricingRuleServiceImpl;
+import com.example.demo.service.impl.PricingRuleServiceimpl;
 
 @RestController
 @RequestMapping("/api/pricing-rules")
