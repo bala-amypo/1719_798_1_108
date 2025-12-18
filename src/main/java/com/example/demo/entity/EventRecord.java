@@ -3,7 +3,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = "eventCode"))
+@eventcode
 public class EventRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

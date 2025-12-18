@@ -1,7 +1,7 @@
 package com.example.demo.entity;
 import jakarta.persistence.*;
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = "ruleCode"))
+@rulecode
 public class PricingRule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

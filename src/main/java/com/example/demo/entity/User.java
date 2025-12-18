@@ -1,7 +1,7 @@
 package com.example.demo.entity;
 import jakarta.persistence.*;
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = "email"))
+@email
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
