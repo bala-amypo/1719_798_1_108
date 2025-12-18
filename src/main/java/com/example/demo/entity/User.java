@@ -1,4 +1,4 @@
-package com.example.demo.entity;
+package com.example.demo.model;
 
 import jakarta.persistence.*;
 
@@ -15,6 +15,5 @@ public class User {
     private String password;
     private String role;
 
-    public String getEmail() { return email; }
-    public String getPassword() { return password; }
+    // getters and setters
 }

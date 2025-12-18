@@ -1,4 +1,4 @@
-package com.example.demo.entity;
+package com.example.demo.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
@@ -17,12 +17,9 @@ public class PriceAdjustmentLog {
     private LocalDateTime changedAt;
 
     @PrePersist
-    void onCreate() {
+    public void prePersist() {
         changedAt = LocalDateTime.now();
     }
 
-    public void setEventId(Long eventId) { this.eventId = eventId; }
-    public void setOldPrice(Double oldPrice) { this.oldPrice = oldPrice; }
-    public void setNewPrice(Double newPrice) { this.newPrice = newPrice; }
-    public void setReason(String reason) { this.reason = reason; }
+    // getters and setters
 }

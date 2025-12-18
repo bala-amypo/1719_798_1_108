@@ -1,4 +1,4 @@
-package com.example.demo.entity;
+package com.example.demo.model;
 
 import jakarta.persistence.*;
 
@@ -11,13 +11,12 @@ public class PricingRule {
     private Long id;
 
     private String ruleCode;
+    private String description;
     private Integer minRemainingSeats;
     private Integer maxRemainingSeats;
     private Integer daysBeforeEvent;
     private Double priceMultiplier;
     private Boolean active;
 
-    public String getRuleCode() { return ruleCode; }
-    public Double getPriceMultiplier() { return priceMultiplier; }
-    public Boolean getActive() { return active; }
+    // getters and setters
 }

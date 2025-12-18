@@ -1,4 +1,4 @@
-package com.example.demo.entity;
+package com.example.demo.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
@@ -22,13 +22,9 @@ public class EventRecord {
     private LocalDateTime createdAt;
 
     @PrePersist
-    void onCreate() {
+    public void prePersist() {
         createdAt = LocalDateTime.now();
     }
 
-    public Long getId() { return id; }
-    public String getEventCode() { return eventCode; }
-    public Double getBasePrice() { return basePrice; }
-    public Boolean getActive() { return active; }
-    public void setActive(Boolean active) { this.active = active; }
+    // getters and setters
 }
