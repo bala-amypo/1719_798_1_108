@@ -1,19 +1,20 @@
 package com.example.demo.controller;
 
-import java.util.List;
-import org.springframework.web.bind.annotation.*;
+import com.example.demo.entity.PricingRule;
+import com.example.demo.service.PricingRuleService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import com.example.demo.model.PricingRule;
-import com.example.demo.service.impl.PricingRuleServiceimpl;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/pricing-rules")
 @Tag(name = "Pricing Rules")
 public class PricingRuleController {
 
-    private final PricingRuleServiceImpl service;
+    private final PricingRuleService service;
 
-    public PricingRuleController(PricingRuleServiceImpl service) {
+    public PricingRuleController(PricingRuleService service) {
         this.service = service;
     }
 
@@ -22,9 +23,19 @@ public class PricingRuleController {
         return service.createRule(rule);
     }
 
+    @PutMapping("/{id}")
+    public PricingRule update(@PathVariable Long id, @RequestBody PricingRule rule) {
+        return service.updateRule(id, rule);
+    }
+
     @GetMapping("/active")
     public List<PricingRule> getActive() {
         return service.getActiveRules();
+    }
+
+    @GetMapping("/{ruleCode}")
+    public PricingRule getByCode(@PathVariable String ruleCode) {
+        return service.getRuleByCode(ruleCode);
     }
 
     @GetMapping

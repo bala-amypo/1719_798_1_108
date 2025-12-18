@@ -1,19 +1,20 @@
 package com.example.demo.controller;
 
-import java.util.List;
-import org.springframework.web.bind.annotation.*;
+import com.example.demo.entity.EventRecord;
+import com.example.demo.service.EventRecordService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import com.example.demo.model.EventRecord;
-import com.example.demo.service.impl.EventRecordServiceimpl;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/events")
-@Tag(name = "Event Management")
+@Tag(name = "Events")
 public class EventRecordController {
 
-    private final EventRecordServiceImpl service;
+    private final EventRecordService service;
 
-    public EventRecordController(EventRecordServiceImpl service) {
+    public EventRecordController(EventRecordService service) {
         this.service = service;
     }
 

@@ -1,28 +1,28 @@
 package com.example.demo.controller;
 
-import org.springframework.web.bind.annotation.*;
+import com.example.demo.entity.User;
+import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import com.example.demo.model.User;
-import com.example.demo.repository.UserRepository;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
 @Tag(name = "Authentication")
 public class AuthController {
 
-    private final UserRepository repo;
+    private final UserService service;
 
-    public AuthController(UserRepository repo) {
-        this.repo = repo;
+    public AuthController(UserService service) {
+        this.service = service;
     }
 
     @PostMapping("/register")
     public User register(@RequestBody User user) {
-        return repo.save(user);
+        return service.save(user);
     }
 
     @GetMapping("/login")
-    public String login() {
-        return "JWT_TOKEN_PLACEHOLDER";
+    public User login(@RequestParam String email) {
+        return service.findByEmail(email);
     }
 }

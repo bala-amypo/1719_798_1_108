@@ -1,19 +1,20 @@
 package com.example.demo.controller;
 
-import java.util.List;
-import org.springframework.web.bind.annotation.*;
+import com.example.demo.entity.SeatInventoryRecord;
+import com.example.demo.service.SeatInventoryService;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import com.example.demo.model.SeatInventoryRecord;
-import com.example.demo.service.impl.SeatInventoryServiceimpl;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/inventory")
 @Tag(name = "Seat Inventory")
 public class SeatInventoryController {
 
-    private final SeatInventoryServiceImpl service;
+    private final SeatInventoryService service;
 
-    public SeatInventoryController(SeatInventoryServiceImpl service) {
+    public SeatInventoryController(SeatInventoryService service) {
         this.service = service;
     }
 
@@ -23,9 +24,8 @@ public class SeatInventoryController {
     }
 
     @PutMapping("/{eventId}/remaining")
-    public SeatInventoryRecord updateRemaining(
-            @PathVariable Long eventId,
-            @RequestParam Integer remainingSeats) {
+    public SeatInventoryRecord updateRemaining(@PathVariable Long eventId,
+                                                @RequestParam Integer remainingSeats) {
         return service.updateRemainingSeats(eventId, remainingSeats);
     }
 
