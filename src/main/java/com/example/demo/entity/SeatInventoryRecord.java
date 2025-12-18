@@ -21,5 +21,4 @@ public class SeatInventoryRecord {
         updatedAt = LocalDateTime.now();
     }
 
-    // getters and setters
 }

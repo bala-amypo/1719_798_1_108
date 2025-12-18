@@ -26,5 +26,4 @@ public class EventRecord {
         createdAt = LocalDateTime.now();
     }
 
-    // getters and setters
 }

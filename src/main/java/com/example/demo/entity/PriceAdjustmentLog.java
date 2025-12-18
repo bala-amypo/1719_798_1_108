@@ -21,5 +21,4 @@ public class PriceAdjustmentLog {
         changedAt = LocalDateTime.now();
     }
 
-    // getters and setters
 }

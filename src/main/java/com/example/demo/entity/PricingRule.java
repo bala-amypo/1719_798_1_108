@@ -18,5 +18,4 @@ public class PricingRule {
     private Double priceMultiplier;
     private Boolean active;
 
-    // getters and setters
 }
