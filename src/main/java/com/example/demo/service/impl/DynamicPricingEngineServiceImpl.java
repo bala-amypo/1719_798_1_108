@@ -1,8 +1,16 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.*;
+import com.example.demo.entity.DynamicPriceRecord;
+import com.example.demo.entity.EventRecord;
+import com.example.demo.entity.PriceAdjustmentLog;
+import com.example.demo.entity.PricingRule;
+import com.example.demo.entity.SeatInventoryRecord;
 import com.example.demo.exception.BadRequestException;
-import com.example.demo.repository.*;
+import com.example.demo.repository.DynamicPriceRecordRepository;
+import com.example.demo.repository.EventRecordRepository;
+import com.example.demo.repository.PriceAdjustmentLogRepository;
+import com.example.demo.repository.PricingRuleRepository;
+import com.example.demo.repository.SeatInventoryRecordRepository;
 import com.example.demo.service.DynamicPricingEngineService;
 import org.springframework.stereotype.Service;
 
@@ -10,6 +18,7 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DynamicPricingEngineServiceImpl implements DynamicPricingEngineService {
@@ -48,16 +57,15 @@ public class DynamicPricingEngineServiceImpl implements DynamicPricingEngineServ
                 .findByEventId(eventId)
                 .orElseThrow(() -> new BadRequestException("Seat inventory not found"));
 
-        double basePrice = event.getBasePrice();
-        double computedPrice = basePrice;
+        double computedPrice = event.getBasePrice();
 
         long daysBeforeEvent =
                 ChronoUnit.DAYS.between(LocalDate.now(), event.getEventDate());
 
-        List<PricingRule> activeRules = pricingRuleRepository.findByActiveTrue();
+        List<PricingRule> rules = pricingRuleRepository.findByActiveTrue();
         List<String> appliedRuleCodes = new ArrayList<>();
 
-        for (PricingRule rule : activeRules) {
+        for (PricingRule rule : rules) {
 
             boolean seatMatch =
                     inventory.getRemainingSeats() >= rule.getMinRemainingSeats()
@@ -80,6 +88,9 @@ public class DynamicPricingEngineServiceImpl implements DynamicPricingEngineServ
             throw new BadRequestException("Computed price must be > 0");
         }
 
+        Optional<DynamicPriceRecord> previousOpt =
+                dynamicPriceRecordRepository.findFirstByEventIdOrderByComputedAtDesc(eventId);
+
         DynamicPriceRecord record = new DynamicPriceRecord();
         record.setEventId(eventId);
         record.setComputedPrice(computedPrice);
@@ -87,16 +98,16 @@ public class DynamicPricingEngineServiceImpl implements DynamicPricingEngineServ
 
         dynamicPriceRecordRepository.save(record);
 
-        DynamicPriceRecord last =
-                dynamicPriceRecordRepository.findFirstByEventIdOrderByComputedAtDesc(eventId);
-
-        if (last != null && Double.compare(last.getComputedPrice(), computedPrice) != 0) {
-            PriceAdjustmentLog log = new PriceAdjustmentLog();
-            log.setEventId(eventId);
-            log.setOldPrice(last.getComputedPrice());
-            log.setNewPrice(computedPrice);
-            log.setReason("Dynamic pricing rule adjustment");
-            priceAdjustmentLogRepository.save(log);
+        if (previousOpt.isPresent()) {
+            DynamicPriceRecord previous = previousOpt.get();
+            if (Double.compare(previous.getComputedPrice(), computedPrice) != 0) {
+                PriceAdjustmentLog log = new PriceAdjustmentLog();
+                log.setEventId(eventId);
+                log.setOldPrice(previous.getComputedPrice());
+                log.setNewPrice(computedPrice);
+                log.setReason("Dynamic pricing rule adjustment");
+                priceAdjustmentLogRepository.save(log);
+            }
         }
 
         return record;
@@ -109,7 +120,9 @@ public class DynamicPricingEngineServiceImpl implements DynamicPricingEngineServ
 
     @Override
     public DynamicPriceRecord getLatestPrice(Long eventId) {
-        return dynamicPriceRecordRepository.findFirstByEventIdOrderByComputedAtDesc(eventId);
+        return dynamicPriceRecordRepository
+                .findFirstByEventIdOrderByComputedAtDesc(eventId)
+                .orElse(null);
     }
 
     @Override
