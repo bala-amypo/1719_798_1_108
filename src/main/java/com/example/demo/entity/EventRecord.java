@@ -5,7 +5,10 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "event_records", uniqueConstraints = @UniqueConstraint(columnNames = "eventCode"))
+@Table(
+    name = "event_records",
+    uniqueConstraints = @UniqueConstraint(columnNames = "eventCode")
+)
 public class EventRecord {
 
     @Id
@@ -23,7 +26,6 @@ public class EventRecord {
     private Double basePrice;
 
     private LocalDateTime createdAt;
-
     private Boolean active;
 
     @PrePersist
@@ -31,20 +33,63 @@ public class EventRecord {
         this.createdAt = LocalDateTime.now();
     }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public Long getId() {
+        return id;
+    }
 
-    public String getEventCode() { return eventCode; }
-    public void setEventCode(String eventCode) { this.eventCode = eventCode; }
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-    public String getEventName() { return eventName; }
-    public void setEventName(String eventName) { this.eventName = eventName; }
+    public String getEventCode() {
+        return eventCode;
+    }
 
-    public String getVenue() { return venue; }
-    public void setVenue(String venue) { this.venue = venue; }
+    public void setEventCode(String eventCode) {
+        this.eventCode = eventCode;
+    }
 
-    public LocalDate getEventDate() { return eventDate; }
-    public void setEventDate(LocalDate eventDate) { this.eventDate = eventDate; }
+    public String getEventName() {
+        return eventName;
+    }
 
-    public Double getBasePrice() { return basePrice; }
-    public void setBasePrice(Double basePrice)
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
+    }
+
+    public String getVenue() {
+        return venue;
+    }
+
+    public void setVenue(String venue) {
+        this.venue = venue;
+    }
+
+    public LocalDate getEventDate() {
+        return eventDate;
+    }
+
+    public void setEventDate(LocalDate eventDate) {
+        this.eventDate = eventDate;
+    }
+
+    public Double getBasePrice() {
+        return basePrice;
+    }
+
+    public void setBasePrice(Double basePrice) {
+        this.basePrice = basePrice;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+}
