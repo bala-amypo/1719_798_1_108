@@ -24,13 +24,13 @@ public class EventRecord {
 
     private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "eventId")
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<SeatInventoryRecord> inventories;
 
-    @OneToMany(mappedBy = "eventId")
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<DynamicPriceRecord> prices;
 
-    @OneToMany(mappedBy = "eventId")
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<PriceAdjustmentLog> adjustments;
 
     @PrePersist
@@ -41,8 +41,9 @@ public class EventRecord {
     public EventRecord() {
     }
 
-    public EventRecord(Long id, String eventCode, String eventName, String venue,
-                       LocalDate eventDate, Double basePrice, Boolean active) {
+    public EventRecord(Long id, String eventCode, String eventName,
+                       String venue, LocalDate eventDate,
+                       Double basePrice, Boolean active) {
         this.id = id;
         this.eventCode = eventCode;
         this.eventName = eventName;
@@ -60,6 +61,9 @@ public class EventRecord {
     public Double getBasePrice() { return basePrice; }
     public Boolean getActive() { return active; }
     public LocalDateTime getCreatedAt() { return createdAt; }
+    public List<SeatInventoryRecord> getInventories() { return inventories; }
+    public List<DynamicPriceRecord> getPrices() { return prices; }
+    public List<PriceAdjustmentLog> getAdjustments() { return adjustments; }
 
     public void setId(Long id) { this.id = id; }
     public void setEventCode(String eventCode) { this.eventCode = eventCode; }
@@ -68,4 +72,7 @@ public class EventRecord {
     public void setEventDate(LocalDate eventDate) { this.eventDate = eventDate; }
     public void setBasePrice(Double basePrice) { this.basePrice = basePrice; }
     public void setActive(Boolean active) { this.active = active; }
+    public void setInventories(List<SeatInventoryRecord> inventories) { this.inventories = inventories; }
+    public void setPrices(List<DynamicPriceRecord> prices) { this.prices = prices; }
+    public void setAdjustments(List<PriceAdjustmentLog> adjustments) { this.adjustments = adjustments; }
 }
