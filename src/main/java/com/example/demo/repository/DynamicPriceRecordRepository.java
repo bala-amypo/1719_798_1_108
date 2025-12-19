@@ -1,11 +1,10 @@
 package com.example.demo.repository;
 
-import java.util.List;
-import java.util.Optional;
-
+import com.example.demo.model.DynamicPriceRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.demo.model.DynamicPriceRecord;
+import java.util.List;
+import java.util.Optional;
 
 public interface DynamicPriceRecordRepository extends JpaRepository<DynamicPriceRecord, Long> {
 

@@ -1,14 +1,13 @@
 package com.example.demo.repository;
 
-import java.util.Optional;
-
+import com.example.demo.model.EventRecord;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.demo.model.EventRecord;
+import java.util.Optional;
 
 public interface EventRecordRepository extends JpaRepository<EventRecord, Long> {
 
-    boolean existsByEventCode(String code);
+    boolean existsByEventCode(String eventCode);
 
-    Optional<EventRecord> findByEventCode(String code);
+    Optional<EventRecord> findByEventCode(String eventCode);
 }

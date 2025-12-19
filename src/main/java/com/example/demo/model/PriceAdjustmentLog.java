@@ -1,7 +1,7 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.time.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "price_adjustment_logs")
@@ -18,16 +18,31 @@ public class PriceAdjustmentLog {
     private LocalDateTime changedAt;
 
     @PrePersist
-    void onCreate() {
-        changedAt = LocalDateTime.now();
+    public void onCreate() {
+        this.changedAt = LocalDateTime.now();
     }
 
-    public PriceAdjustmentLog() {}
+    public PriceAdjustmentLog() {
+    }
 
-    public PriceAdjustmentLog(Long eventId, Double oldPrice, Double newPrice, String reason) {
+    public PriceAdjustmentLog(Long id, Long eventId, Double oldPrice, Double newPrice, String reason) {
+        this.id = id;
         this.eventId = eventId;
         this.oldPrice = oldPrice;
         this.newPrice = newPrice;
         this.reason = reason;
     }
+
+    public Long getId() { return id; }
+    public Long getEventId() { return eventId; }
+    public Double getOldPrice() { return oldPrice; }
+    public Double getNewPrice() { return newPrice; }
+    public String getReason() { return reason; }
+    public LocalDateTime getChangedAt() { return changedAt; }
+
+    public void setId(Long id) { this.id = id; }
+    public void setEventId(Long eventId) { this.eventId = eventId; }
+    public void setOldPrice(Double oldPrice) { this.oldPrice = oldPrice; }
+    public void setNewPrice(Double newPrice) { this.newPrice = newPrice; }
+    public void setReason(String reason) { this.reason = reason; }
 }

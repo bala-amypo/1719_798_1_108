@@ -1,7 +1,7 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.time.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "seat_inventory_records")
@@ -18,11 +18,12 @@ public class SeatInventoryRecord {
 
     @PrePersist
     @PreUpdate
-    void onUpdate() {
-        updatedAt = LocalDateTime.now();
+    public void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
     }
 
-    public SeatInventoryRecord() {}
+    public SeatInventoryRecord() {
+    }
 
     public SeatInventoryRecord(Long id, Long eventId, Integer totalSeats, Integer remainingSeats) {
         this.id = id;
@@ -31,8 +32,14 @@ public class SeatInventoryRecord {
         this.remainingSeats = remainingSeats;
     }
 
+    public Long getId() { return id; }
     public Long getEventId() { return eventId; }
-    public Integer getRemainingSeats() { return remainingSeats; }
     public Integer getTotalSeats() { return totalSeats; }
+    public Integer getRemainingSeats() { return remainingSeats; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+
+    public void setId(Long id) { this.id = id; }
+    public void setEventId(Long eventId) { this.eventId = eventId; }
+    public void setTotalSeats(Integer totalSeats) { this.totalSeats = totalSeats; }
     public void setRemainingSeats(Integer remainingSeats) { this.remainingSeats = remainingSeats; }
 }
