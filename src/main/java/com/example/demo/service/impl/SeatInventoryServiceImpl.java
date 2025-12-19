@@ -22,18 +22,18 @@ public class SeatInventoryServiceImpl implements SeatInventoryService {
     }
 
     @Override
-    public SeatInventoryRecord updateRemainingSeats(Long inventoryId, Integer remainingSeats) {
-        SeatInventoryRecord inventory = repository.findById(inventoryId).orElse(null);
-        if (inventory == null) {
+    public SeatInventoryRecord updateRemainingSeats(Long eventId, Integer remainingSeats) {
+        SeatInventoryRecord record = repository.findByEventId(eventId).orElse(null);
+        if (record == null) {
             return null;
         }
-        inventory.setRemainingSeats(remainingSeats);
-        return repository.save(inventory);
+        record.setRemainingSeats(remainingSeats);
+        return repository.save(record);
     }
 
     @Override
-    public List<SeatInventoryRecord> getInventoryByEvent(Long eventId) {
-        return repository.findByEventId(eventId);
+    public SeatInventoryRecord getInventoryByEvent(Long eventId) {
+        return repository.findByEventId(eventId).orElse(null);
     }
 
     @Override
