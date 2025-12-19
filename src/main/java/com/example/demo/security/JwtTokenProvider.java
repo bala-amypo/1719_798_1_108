@@ -10,18 +10,8 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-    private String secret = "test-secret-key";
-    private long validityInMs = 3600000;
-    private boolean someFlag = false;
-
-    public JwtTokenProvider() {
-    }
-
-    public JwtTokenProvider(String secret, long validityInMs, boolean someFlag) {
-        this.secret = secret;
-        this.validityInMs = validityInMs;
-        this.someFlag = someFlag;
-    }
+    private final String secret = "test-secret-key";
+    private final long validityInMs = 3600000;
 
     public String generateToken(Long userId, String email, String role) {
         Claims claims = Jwts.claims();
@@ -50,19 +40,15 @@ public class JwtTokenProvider {
         }
     }
 
-    public Claims getAllClaims(String token) {
+    public Claims getClaimsFromToken(String token) {
         return Jwts.parser()
                 .setSigningKey(secret)
                 .parseClaimsJws(token)
                 .getBody();
     }
 
-    public Claims getClaimsFromToken(String token) {
-        return getAllClaims(token);
-    }
-
     public String getUsernameFromToken(String token) {
-        return getAllClaims(token).getSubject();
+        return getClaimsFromToken(token).getSubject();
     }
 }
 
