@@ -7,6 +7,6 @@ import java.util.Optional;
 
 public interface SeatInventoryRecordRepository extends JpaRepository<SeatInventoryRecord, Long> {
 
-    // Spring Data JPA will resolve this automatically by the "event" field in SeatInventoryRecord
-    Optional<SeatInventoryRecord> findByEventId(Long eventId);
+    // Correct query to find inventory by event ID
+    Optional<SeatInventoryRecord> findByEvent_Id(Long eventId);
 }
