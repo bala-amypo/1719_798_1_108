@@ -6,6 +6,7 @@ import com.example.demo.repository.*;
 import com.example.demo.service.DynamicPricingEngineService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
@@ -35,14 +36,15 @@ public class DynamicPricingEngineServiceImpl implements DynamicPricingEngineServ
     @Override
     public DynamicPriceRecord computeDynamicPrice(Long eventId) {
 
+        // Correctly fetch EventRecord object
         EventRecord event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new BadRequestException("Event not found"));
 
-        if (!event.getActive()) {
+        if (!Boolean.TRUE.equals(event.getActive())) {
             throw new BadRequestException("Event is not active");
         }
 
-        // Use findByEvent_Id to get SeatInventoryRecord by Event
+        // Fetch SeatInventoryRecord by Event ID
         SeatInventoryRecord inventory = inventoryRepository.findByEvent_Id(eventId)
                 .orElseThrow(() -> new BadRequestException("Seat inventory not found"));
 
@@ -50,7 +52,7 @@ public class DynamicPricingEngineServiceImpl implements DynamicPricingEngineServ
         double multiplier = 1.0;
         String appliedRules = "";
 
-        long daysToEvent = ChronoUnit.DAYS.between(java.time.LocalDate.now(), event.getEventDate());
+        long daysToEvent = ChronoUnit.DAYS.between(LocalDate.now(), event.getEventDate());
 
         for (PricingRule rule : rules) {
             if (inventory.getRemainingSeats() >= rule.getMinRemainingSeats()
@@ -96,6 +98,7 @@ public class DynamicPricingEngineServiceImpl implements DynamicPricingEngineServ
         return priceRepository.findAll();
     }
 }
+
 
 
 
