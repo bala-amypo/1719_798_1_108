@@ -1,17 +1,23 @@
 package com.example.demo.service;
 
 import com.example.demo.model.SeatInventoryRecord;
+import com.example.demo.repository.SeatInventoryRepository;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+@Service
+public class SeatInventoryService {
 
-public interface SeatInventoryService {
+    private final SeatInventoryRepository repository;
 
-    SeatInventoryRecord createInventory(SeatInventoryRecord inventory);
+    public SeatInventoryService(SeatInventoryRepository repository) {
+        this.repository = repository;
+    }
 
-    SeatInventoryRecord updateRemainingSeats(Long eventId, Integer remainingSeats);
+    public SeatInventoryRecord getById(Long id) {
+        return repository.findById(id).orElse(null);
+    }
 
-    Optional<SeatInventoryRecord> getInventoryByEvent(Long eventId);
-
-    List<SeatInventoryRecord> getAllInventories();
+    public SeatInventoryRecord save(SeatInventoryRecord record) {
+        return repository.save(record);
+    }
 }
