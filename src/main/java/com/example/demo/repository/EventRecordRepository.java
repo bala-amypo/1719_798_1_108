@@ -4,7 +4,7 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.demo.model.EventRecord;
+import com.example.demo.entity.EventRecord;
 
 public interface EventRecordRepository extends JpaRepository<EventRecord, Long> {
 
