@@ -57,6 +57,10 @@ public class JwtTokenProvider {
                 .getBody();
     }
 
+    public Claims getClaimsFromToken(String token) {
+        return getAllClaims(token);
+    }
+
     public String getUsernameFromToken(String token) {
         return getAllClaims(token).getSubject();
     }
