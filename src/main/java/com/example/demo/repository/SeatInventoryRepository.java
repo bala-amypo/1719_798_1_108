@@ -1,18 +1,14 @@
-package com.example.demo.service;
+package com.example.demo.repository;
 
 import com.example.demo.model.SeatInventoryRecord;
+import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
-public interface SeatInventoryService {
+public interface SeatInventoryRepository extends JpaRepository<SeatInventoryRecord, Long> {
 
-    SeatInventoryRecord createInventory(SeatInventoryRecord inventory);
+    Optional<SeatInventoryRecord> findByEventId(Long eventId);
 
-    SeatInventoryRecord updateRemainingSeats(Long eventId, Integer remainingSeats);
-
-    SeatInventoryRecord getInventoryByEvent(Long eventId);
-
-    List<SeatInventoryRecord> getAllInventories();
-
-    SeatInventoryRecord getById(Long id);
+    List<SeatInventoryRecord> findAll();
 }
