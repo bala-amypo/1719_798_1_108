@@ -42,6 +42,7 @@ public class DynamicPricingEngineServiceImpl implements DynamicPricingEngineServ
             throw new BadRequestException("Event is not active");
         }
 
+        // Use findByEvent_Id to get SeatInventoryRecord by Event
         SeatInventoryRecord inventory = inventoryRepository.findByEvent_Id(eventId)
                 .orElseThrow(() -> new BadRequestException("Seat inventory not found"));
 
@@ -95,6 +96,7 @@ public class DynamicPricingEngineServiceImpl implements DynamicPricingEngineServ
         return priceRepository.findAll();
     }
 }
+
 
 
     // @Override
