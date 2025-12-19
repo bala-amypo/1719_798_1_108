@@ -95,7 +95,8 @@ public class DynamicPricingEngineServiceImpl implements DynamicPricingEngineServ
     public List<DynamicPriceRecord> getAllComputedPrices() {
         return priceRepository.findAll();
     }
-} // <-- Only one closing brace for the class
+}
+// <-- Only one closing brace for the class
 
 
 
