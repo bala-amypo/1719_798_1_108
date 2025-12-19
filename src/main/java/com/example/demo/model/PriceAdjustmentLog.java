@@ -11,10 +11,14 @@ public class PriceAdjustmentLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long eventId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id", nullable = false)
+    private EventRecord event;
+
     private Double oldPrice;
     private Double newPrice;
     private String reason;
+
     private LocalDateTime changedAt;
 
     @PrePersist
@@ -25,23 +29,24 @@ public class PriceAdjustmentLog {
     public PriceAdjustmentLog() {
     }
 
-    public PriceAdjustmentLog(Long id, Long eventId, Double oldPrice, Double newPrice, String reason) {
+    public PriceAdjustmentLog(Long id, EventRecord event,
+                              Double oldPrice, Double newPrice, String reason) {
         this.id = id;
-        this.eventId = eventId;
+        this.event = event;
         this.oldPrice = oldPrice;
         this.newPrice = newPrice;
         this.reason = reason;
     }
 
     public Long getId() { return id; }
-    public Long getEventId() { return eventId; }
+    public EventRecord getEvent() { return event; }
     public Double getOldPrice() { return oldPrice; }
     public Double getNewPrice() { return newPrice; }
     public String getReason() { return reason; }
     public LocalDateTime getChangedAt() { return changedAt; }
 
     public void setId(Long id) { this.id = id; }
-    public void setEventId(Long eventId) { this.eventId = eventId; }
+    public void setEvent(EventRecord event) { this.event = event; }
     public void setOldPrice(Double oldPrice) { this.oldPrice = oldPrice; }
     public void setNewPrice(Double newPrice) { this.newPrice = newPrice; }
     public void setReason(String reason) { this.reason = reason; }

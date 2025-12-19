@@ -11,9 +11,13 @@ public class DynamicPriceRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long eventId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id", nullable = false)
+    private EventRecord event;
+
     private Double computedPrice;
     private String appliedRuleCodes;
+
     private LocalDateTime computedAt;
 
     @PrePersist
@@ -24,21 +28,22 @@ public class DynamicPriceRecord {
     public DynamicPriceRecord() {
     }
 
-    public DynamicPriceRecord(Long id, Long eventId, Double computedPrice, String appliedRuleCodes) {
+    public DynamicPriceRecord(Long id, EventRecord event,
+                              Double computedPrice, String appliedRuleCodes) {
         this.id = id;
-        this.eventId = eventId;
+        this.event = event;
         this.computedPrice = computedPrice;
         this.appliedRuleCodes = appliedRuleCodes;
     }
 
     public Long getId() { return id; }
-    public Long getEventId() { return eventId; }
+    public EventRecord getEvent() { return event; }
     public Double getComputedPrice() { return computedPrice; }
     public String getAppliedRuleCodes() { return appliedRuleCodes; }
     public LocalDateTime getComputedAt() { return computedAt; }
 
     public void setId(Long id) { this.id = id; }
-    public void setEventId(Long eventId) { this.eventId = eventId; }
+    public void setEvent(EventRecord event) { this.event = event; }
     public void setComputedPrice(Double computedPrice) { this.computedPrice = computedPrice; }
     public void setAppliedRuleCodes(String appliedRuleCodes) { this.appliedRuleCodes = appliedRuleCodes; }
 }

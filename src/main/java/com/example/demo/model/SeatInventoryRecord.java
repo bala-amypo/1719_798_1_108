@@ -11,9 +11,13 @@ public class SeatInventoryRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long eventId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id", nullable = false)
+    private EventRecord event;
+
     private Integer totalSeats;
     private Integer remainingSeats;
+
     private LocalDateTime updatedAt;
 
     @PrePersist
@@ -25,21 +29,22 @@ public class SeatInventoryRecord {
     public SeatInventoryRecord() {
     }
 
-    public SeatInventoryRecord(Long id, Long eventId, Integer totalSeats, Integer remainingSeats) {
+    public SeatInventoryRecord(Long id, EventRecord event,
+                               Integer totalSeats, Integer remainingSeats) {
         this.id = id;
-        this.eventId = eventId;
+        this.event = event;
         this.totalSeats = totalSeats;
         this.remainingSeats = remainingSeats;
     }
 
     public Long getId() { return id; }
-    public Long getEventId() { return eventId; }
+    public EventRecord getEvent() { return event; }
     public Integer getTotalSeats() { return totalSeats; }
     public Integer getRemainingSeats() { return remainingSeats; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
 
     public void setId(Long id) { this.id = id; }
-    public void setEventId(Long eventId) { this.eventId = eventId; }
+    public void setEvent(EventRecord event) { this.event = event; }
     public void setTotalSeats(Integer totalSeats) { this.totalSeats = totalSeats; }
     public void setRemainingSeats(Integer remainingSeats) { this.remainingSeats = remainingSeats; }
 }
