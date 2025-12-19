@@ -35,7 +35,6 @@ public class DynamicPricingEngineServiceImpl implements DynamicPricingEngineServ
 
     @Override
     public DynamicPriceRecord computeDynamicPrice(Long eventId) {
-
         EventRecord event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new BadRequestException("Event not found"));
 
@@ -66,14 +65,14 @@ public class DynamicPricingEngineServiceImpl implements DynamicPricingEngineServ
 
         double newPrice = event.getBasePrice() * multiplier;
 
-        DynamicPriceRecord record = new DynamicPriceRecord(null, eventId, newPrice, appliedRules);
+        DynamicPriceRecord record = new DynamicPriceRecord(null, event, newPrice, appliedRules);
 
-        Optional<DynamicPriceRecord> previous = priceRepository.findFirstByEventIdOrderByComputedAtDesc(eventId);
+        Optional<DynamicPriceRecord> previous = priceRepository.findFirstByEventOrderByComputedAtDesc(event);
 
         previous.ifPresent(p -> {
             if (!p.getComputedPrice().equals(newPrice)) {
                 PriceAdjustmentLog log = new PriceAdjustmentLog(
-                        null, eventId, p.getComputedPrice(), newPrice, "Price updated");
+                        null, event, p.getComputedPrice(), newPrice, "Price updated");
                 logRepository.save(log);
             }
         });
@@ -83,12 +82,16 @@ public class DynamicPricingEngineServiceImpl implements DynamicPricingEngineServ
 
     @Override
     public List<DynamicPriceRecord> getPriceHistory(Long eventId) {
-        return priceRepository.findByEventIdOrderByComputedAtDesc(eventId);
+        EventRecord event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new BadRequestException("Event not found"));
+        return priceRepository.findByEventOrderByComputedAtDesc(event);
     }
 
     @Override
     public Optional<DynamicPriceRecord> getLatestPrice(Long eventId) {
-        return priceRepository.findFirstByEventIdOrderByComputedAtDesc(eventId);
+        EventRecord event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new BadRequestException("Event not found"));
+        return priceRepository.findFirstByEventOrderByComputedAtDesc(event);
     }
 
     @Override
@@ -96,7 +99,7 @@ public class DynamicPricingEngineServiceImpl implements DynamicPricingEngineServ
         return priceRepository.findAll();
     }
 }
-// <-- Only one closing brace for the class
+
 
 
 
