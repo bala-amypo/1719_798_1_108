@@ -1,45 +1,43 @@
 package com.example.demo.controller;
 
-import com.example.demo.entity.EventRecord;
+import com.example.demo.model.EventRecord;
 import com.example.demo.service.EventRecordService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/events")
-@Tag(name = "Events")
 public class EventRecordController {
 
-    private final EventRecordService service;
+    private final EventRecordService eventService;
 
-    public EventRecordController(EventRecordService service) {
-        this.service = service;
+    public EventRecordController(EventRecordService eventService) {
+        this.eventService = eventService;
     }
 
     @PostMapping
     public EventRecord create(@RequestBody EventRecord event) {
-        return service.createEvent(event);
+        return eventService.createEvent(event);
     }
 
     @GetMapping("/{id}")
     public EventRecord getById(@PathVariable Long id) {
-        return service.getEventById(id);
+        return eventService.getEventById(id);
     }
 
     @GetMapping
     public List<EventRecord> getAll() {
-        return service.getAllEvents();
+        return eventService.getAllEvents();
     }
 
     @PutMapping("/{id}/status")
     public EventRecord updateStatus(@PathVariable Long id, @RequestParam boolean active) {
-        return service.updateEventStatus(id, active);
+        return eventService.updateEventStatus(id, active);
     }
 
     @GetMapping("/lookup/{eventCode}")
     public EventRecord getByCode(@PathVariable String eventCode) {
-        return service.getEventByCode(eventCode);
+        return eventService.getEventByCode(eventCode).orElseThrow();
     }
 }
