@@ -1,47 +1,43 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.EventRecord;
 import com.example.demo.exception.BadRequestException;
+import com.example.demo.model.EventRecord;
 import com.example.demo.repository.EventRecordRepository;
 import com.example.demo.service.EventRecordService;
-import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
-@Service
 public class EventRecordServiceImpl implements EventRecordService {
 
-    private final EventRecordRepository eventRecordRepository;
+    private final EventRecordRepository repo;
 
-    public EventRecordServiceImpl(EventRecordRepository eventRecordRepository) {
-        this.eventRecordRepository = eventRecordRepository;
+    public EventRecordServiceImpl(EventRecordRepository repo) {
+        this.repo = repo;
     }
 
-    public EventRecord createEvent(EventRecord event) {
-        if (eventRecordRepository.existsByEventCode(event.getEventCode())) {
+    public EventRecord createEvent(EventRecord e) {
+        if (repo.existsByEventCode(e.getEventCode()))
             throw new BadRequestException("Event code already exists");
-        }
-        if (event.getBasePrice() == null || event.getBasePrice() <= 0) {
+        if (e.getBasePrice() <= 0)
             throw new BadRequestException("Base price must be > 0");
-        }
-        return eventRecordRepository.save(event);
+        return repo.save(e);
     }
 
     public EventRecord getEventById(Long id) {
-        return eventRecordRepository.findById(id).orElse(null);
+        return repo.findById(id).orElseThrow();
     }
 
-    public EventRecord getEventByCode(String eventCode) {
-        return eventRecordRepository.findByEventCode(eventCode).orElse(null);
+    public Optional<EventRecord> getEventByCode(String code) {
+        return repo.findByEventCode(code);
     }
 
     public List<EventRecord> getAllEvents() {
-        return eventRecordRepository.findAll();
+        return repo.findAll();
     }
 
     public EventRecord updateEventStatus(Long id, boolean active) {
-        EventRecord event = getEventById(id);
-        event.setActive(active);
-        return eventRecordRepository.save(event);
+        EventRecord e = getEventById(id);
+        e.setActive(active);
+        return repo.save(e);
     }
 }

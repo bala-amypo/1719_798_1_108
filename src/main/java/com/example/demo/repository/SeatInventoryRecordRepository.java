@@ -4,10 +4,9 @@ import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.demo.entity.SeatInventoryRecord;
+import com.example.demo.model.SeatInventoryRecord;
 
-public interface SeatInventoryRecordRepository
-        extends JpaRepository<SeatInventoryRecord, Long> {
+public interface SeatInventoryRecordRepository extends JpaRepository<SeatInventoryRecord, Long> {
 
     Optional<SeatInventoryRecord> findByEventId(Long eventId);
 }
