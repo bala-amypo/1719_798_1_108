@@ -3,20 +3,15 @@ package com.example.demo.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.stereotype.Component;
 
 import java.util.Date;
 
+@Component
 public class JwtTokenProvider {
 
-    private final String secret;
-    private final long validityInMs;
-    private final boolean someFlag;
-
-    public JwtTokenProvider(String secret, long validityInMs, boolean someFlag) {
-        this.secret = secret;
-        this.validityInMs = validityInMs;
-        this.someFlag = someFlag;
-    }
+    private final String secret = "mySecretKey";      // replace with environment variable in production
+    private final long validityInMs = 86400000L;      // 1 day
 
     public String generateToken(Long userId, String email, String role) {
         Claims claims = Jwts.claims();

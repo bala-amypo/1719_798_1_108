@@ -16,18 +16,16 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
+                    "/auth/**",          // allow authentication endpoints
                     "/swagger-ui/**",
-                    "/v3/api-docs/**",
-                    "/hello"
+                    "/v3/api-docs/**"
                 ).permitAll()
                 .anyRequest().authenticated()
             )
             .httpBasic();
-
         return http.build();
     }
 
-    // Add this bean to allow password encoding in your service
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
