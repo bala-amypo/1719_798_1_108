@@ -1,7 +1,6 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.exception.BadRequestException;
-import com.example.demo.model.EventRecord;
 import com.example.demo.model.SeatInventoryRecord;
 import com.example.demo.repository.EventRecordRepository;
 import com.example.demo.repository.SeatInventoryRecordRepository;
@@ -30,7 +29,7 @@ public class SeatInventoryServiceImpl implements SeatInventoryService {
 
     @Override
     public SeatInventoryRecord updateRemainingSeats(Long eventId, Integer remainingSeats) {
-        SeatInventoryRecord inventory = inventoryRepository.findByEventId(eventId)
+        SeatInventoryRecord inventory = inventoryRepository.findByEvent_Id(eventId)
                 .orElseThrow(() -> new BadRequestException("Inventory not found"));
 
         inventory.setRemainingSeats(remainingSeats);
@@ -39,7 +38,7 @@ public class SeatInventoryServiceImpl implements SeatInventoryService {
 
     @Override
     public SeatInventoryRecord getInventoryByEvent(Long eventId) {
-        return inventoryRepository.findByEventId(eventId)
+        return inventoryRepository.findByEvent_Id(eventId)
                 .orElseThrow(() -> new BadRequestException("Inventory not found"));
     }
 
