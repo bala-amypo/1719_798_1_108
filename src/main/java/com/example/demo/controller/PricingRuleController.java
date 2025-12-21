@@ -1,47 +1,47 @@
-package com.example.demo.controller;
+// package com.example.demo.controller;
 
-import com.example.demo.model.PricingRule;
-import com.example.demo.service.PricingRuleService;
-import org.springframework.web.bind.annotation.*;
+// import com.example.demo.model.PricingRule;
+// import com.example.demo.service.PricingRuleService;
+// import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+// import java.util.List;
 
-@RestController
-@RequestMapping("/api/pricing-rules")
-public class PricingRuleController {
+// @RestController
+// @RequestMapping("/api/pricing-rules")
+// public class PricingRuleController {
 
-    private final PricingRuleService ruleService;
+//     private final PricingRuleService ruleService;
 
-    public PricingRuleController(PricingRuleService ruleService) {
-        this.ruleService = ruleService;
-    }
+//     public PricingRuleController(PricingRuleService ruleService) {
+//         this.ruleService = ruleService;
+//     }
 
-    @PostMapping
-    public PricingRule create(@RequestBody PricingRule rule) {
-        return ruleService.createRule(rule);
-    }
+//     @PostMapping
+//     public PricingRule create(@RequestBody PricingRule rule) {
+//         return ruleService.createRule(rule);
+//     }
 
-    @PutMapping("/{id}")
-    public PricingRule update(@PathVariable Long id, @RequestBody PricingRule rule) {
-        return ruleService.updateRule(id, rule);
-    }
+//     @PutMapping("/{id}")
+//     public PricingRule update(@PathVariable Long id, @RequestBody PricingRule rule) {
+//         return ruleService.updateRule(id, rule);
+//     }
 
-    @GetMapping("/active")
-    public List<PricingRule> getActive() {
-        return ruleService.getActiveRules();
-    }
+//     @GetMapping("/active")
+//     public List<PricingRule> getActive() {
+//         return ruleService.getActiveRules();
+//     }
 
-    @GetMapping("/{id}")
-    public PricingRule getById(@PathVariable Long id) {
-        return ruleService.getAllRules()
-                .stream()
-                .filter(r -> r.getId().equals(id))
-                .findFirst()
-                .orElseThrow();
-    }
+//     @GetMapping("/{id}")
+//     public PricingRule getById(@PathVariable Long id) {
+//         return ruleService.getAllRules()
+//                 .stream()
+//                 .filter(r -> r.getId().equals(id))
+//                 .findFirst()
+//                 .orElseThrow();
+//     }
 
-    @GetMapping
-    public List<PricingRule> getAll() {
-        return ruleService.getAllRules();
-    }
-}
+//     @GetMapping
+//     public List<PricingRule> getAll() {
+//         return ruleService.getAllRules();
+//     }
+// }
