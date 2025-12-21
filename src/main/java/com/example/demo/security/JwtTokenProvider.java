@@ -1,3 +1,58 @@
+package com.example.demo.security;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import org.springframework.stereotype.Component;
+import java.util.Date;
+
+@Component
+public class JwtTokenProvider {
+    
+    private final String secret;
+    private final long validityInMs;
+    private final boolean someFlag;
+    
+    public JwtTokenProvider(String secret, long validityInMs, boolean someFlag) {
+        this.secret = secret;
+        this.validityInMs = validityInMs;
+        this.someFlag = someFlag;
+    }
+    
+    public String createToken(String username, String role) {
+        Claims claims = Jwts.claims().setSubject(username);
+        claims.put("role", role);
+        
+        Date now = new Date();
+        Date validity = new Date(now.getTime() + validityInMs);
+        
+        return Jwts.builder()
+                .setClaims(claims)
+                .setIssuedAt(now)
+                .setExpiration(validity)
+                .signWith(SignatureAlgorithm.HS256, secret)
+                .compact();
+    }
+    
+    public String getUsername(String token) {
+        return Jwts.parser()
+                .setSigningKey(secret)
+                .parseClaimsJws(token)
+                .getBody()
+                .getSubject();
+    }
+    
+    public boolean validateToken(String token) {
+        try {
+            Jwts.parser().setSigningKey(secret).parseClaimsJws(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+}
+
+
 // package com.example.demo.security;
 
 // import io.jsonwebtoken.Claims;
