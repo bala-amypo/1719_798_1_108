@@ -1,14 +1,14 @@
-package com.example.demo.service;
+// package com.example.demo.service;
 
-import com.example.demo.model.User;
+// import com.example.demo.model.User;
 
-import java.util.Optional;
+// import java.util.Optional;
 
-public interface UserService {
+// public interface UserService {
 
-    User save(User user);
+//     User save(User user);
 
-    Optional<User> findByEmail(String email);
+//     Optional<User> findByEmail(String email);
 
-    boolean existsByEmail(String email);
-}
+//     boolean existsByEmail(String email);
+// }
