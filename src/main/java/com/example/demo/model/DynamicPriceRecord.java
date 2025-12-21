@@ -1,3 +1,99 @@
+package com.example.demo.model;
+
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "dynamic_price_records")
+public class DynamicPriceRecord {
+    
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    
+    @Column(name = "event_id", nullable = false)
+    private Long eventId;
+    
+    @Column(name = "computed_price", nullable = false)
+    private Double computedPrice;
+    
+    @Column(name = "applied_rule_codes", length = 1000)
+    private String appliedRuleCodes;
+    
+    @Column(name = "computed_at")
+    private LocalDateTime computedAt;
+    
+    @PrePersist
+    protected void onCreate() {
+        computedAt = LocalDateTime.now();
+    }
+    
+    // Constructors
+    public DynamicPriceRecord() {}
+    
+    public DynamicPriceRecord(Long eventId, Double computedPrice, String appliedRuleCodes) {
+        this.eventId = eventId;
+        this.computedPrice = computedPrice;
+        this.appliedRuleCodes = appliedRuleCodes;
+    }
+    
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+    
+    public void setId(Long id) {
+        this.id = id;
+    }
+    
+    public Long getEventId() {
+        return eventId;
+    }
+    
+    public void setEventId(Long eventId) {
+        this.eventId = eventId;
+    }
+    
+    public Double getComputedPrice() {
+        return computedPrice;
+    }
+    
+    public void setComputedPrice(Double computedPrice) {
+        this.computedPrice = computedPrice;
+    }
+    
+    public String getAppliedRuleCodes() {
+        return appliedRuleCodes;
+    }
+    
+    public void setAppliedRuleCodes(String appliedRuleCodes) {
+        this.appliedRuleCodes = appliedRuleCodes;
+    }
+    
+    public LocalDateTime getComputedAt() {
+        return computedAt;
+    }
+    
+    public void setComputedAt(LocalDateTime computedAt) {
+        this.computedAt = computedAt;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // package com.example.demo.model;
 
 // import jakarta.persistence.*;
