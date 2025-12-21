@@ -1,3 +1,70 @@
+package com.example.demo.controller;
+
+import com.example.demo.model.EventRecord;
+import com.example.demo.service.EventRecordService;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/events")
+@Tag(name = "Event Management", description = "Endpoints for managing events")
+public class EventRecordController {
+    
+    private final EventRecordService eventRecordService;
+    
+    public EventRecordController(EventRecordService eventRecordService) {
+        this.eventRecordService = eventRecordService;
+    }
+    
+    @PostMapping
+    public ResponseEntity<EventRecord> createEvent(@RequestBody EventRecord event) {
+        EventRecord created = eventRecordService.createEvent(event);
+        return ResponseEntity.ok(created);
+    }
+    
+    @GetMapping("/{id}")
+    public ResponseEntity<EventRecord> getEvent(@PathVariable Long id) {
+        return eventRecordService.getEventById(id)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
+    }
+    
+    @GetMapping
+    public ResponseEntity<List<EventRecord>> getAllEvents() {
+        List<EventRecord> events = eventRecordService.getAllEvents();
+        return ResponseEntity.ok(events);
+    }
+    
+    @PutMapping("/{id}/status")
+    public ResponseEntity<Void> updateEventStatus(
+            @PathVariable Long id,
+            @RequestParam boolean active) {
+        eventRecordService.updateEventStatus(id, active);
+        return ResponseEntity.ok().build();
+    }
+    
+    @GetMapping("/lookup/{eventCode}")
+    public ResponseEntity<EventRecord> lookupByCode(@PathVariable String eventCode) {
+        return eventRecordService.getEventByCode(eventCode)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 // package com.example.demo.controller;
 
 // import com.example.demo.model.EventRecord;
