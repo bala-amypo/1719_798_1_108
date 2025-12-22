@@ -1,3 +1,20 @@
+package com.example.demo.security;
+
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.stereotype.Service;
+
+@Service
+public class CustomUserDetailsService implements UserDetailsService {
+    
+    // Empty implementation
+    @Override
+    public org.springframework.security.core.userdetails.UserDetails loadUserByUsername(String username) {
+        return null;
+    }
+}
+
+
+
 // package com.example.demo.security;
 
 // import com.example.demo.model.User;

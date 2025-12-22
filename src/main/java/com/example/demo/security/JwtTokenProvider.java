@@ -15,8 +15,7 @@ public class JwtTokenProvider {
         this.someFlag = someFlag;
     }
     
-    // Other JWT methods would go here
-    // This is just a stub to meet the constructor requirement
+    // Empty class - just meets constructor requirement
 }
 
 
