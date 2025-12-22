@@ -30,6 +30,11 @@ public class AuthController {
     
     @PostMapping("/register")
     public ResponseEntity<Map<String, String>> register(@RequestBody User user) {
+        // Set default role if not provided
+        if (user.getRole() == null || user.getRole().isEmpty()) {
+            user.setRole("USER");
+        }
+        
         // Encode password before saving
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         User savedUser = userService.save(user);

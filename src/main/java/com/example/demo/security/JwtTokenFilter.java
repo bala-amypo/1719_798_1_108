@@ -4,20 +4,12 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
-import java.util.Collections;
 
+@Component
 public class JwtTokenFilter extends OncePerRequestFilter {
-    
-    private final JwtTokenProvider jwtTokenProvider;
-    
-    public JwtTokenFilter() {
-        this.jwtTokenProvider = new JwtTokenProvider("your-secret-key", 3600000, false);
-    }
     
     @Override
     protected void doFilterInternal(HttpServletRequest request, 
@@ -25,20 +17,23 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                                    FilterChain filterChain) 
             throws ServletException, IOException {
         
-        String token = resolveToken(request);
+        // Skip authentication for public endpoints
+        String path = request.getServletPath();
+        if (path.startsWith("/auth/") || 
+            path.startsWith("/swagger-ui/") || 
+            path.startsWith("/v3/api-docs/") ||
+            path.equals("/hello-servlet")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         
-        if (token != null && jwtTokenProvider.validateToken(token)) {
-            String username = jwtTokenProvider.getUsername(token);
-            // In a real application, you would get roles from token claims
-            SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_USER");
-            
-            UsernamePasswordAuthenticationToken auth = 
-                new UsernamePasswordAuthenticationToken(
-                    username, 
-                    null, 
-                    Collections.singletonList(authority));
-            
-            SecurityContextHolder.getContext().setAuthentication(auth);
+        // For /api endpoints, check for token
+        if (path.startsWith("/api/")) {
+            String token = resolveToken(request);
+            if (token == null || !token.startsWith("dummy-token-")) {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Missing or invalid token");
+                return;
+            }
         }
         
         filterChain.doFilter(request, response);
