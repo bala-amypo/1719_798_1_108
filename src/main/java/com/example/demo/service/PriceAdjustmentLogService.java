@@ -5,6 +5,8 @@ import java.util.List;
 
 public interface PriceAdjustmentLogService {
     List<PriceAdjustmentLog> getAdjustmentsByEvent(Long eventId);
+    List<PriceAdjustmentLog> getAllAdjustments();
+    PriceAdjustmentLog logAdjustment(PriceAdjustmentLog adjustment);
 }
 
 

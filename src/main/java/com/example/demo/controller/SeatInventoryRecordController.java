@@ -1,44 +1,30 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.SeatInventoryRecord;
-import com.example.demo.service.SeatInventoryRecordService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.demo.service.SeatInventoryService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.util.List;
-import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/inventory")
+@RequestMapping("/api/seat-inventory")
 public class SeatInventoryRecordController {
     
-    @Autowired
-    private SeatInventoryRecordService inventoryService;
+    private final SeatInventoryService seatInventoryService;
+    
+    public SeatInventoryRecordController(SeatInventoryService seatInventoryService) {
+        this.seatInventoryService = seatInventoryService;
+    }
     
     @PostMapping
     public ResponseEntity<SeatInventoryRecord> createInventory(@RequestBody SeatInventoryRecord inventory) {
-        SeatInventoryRecord createdInventory = inventoryService.createInventory(inventory);
-        return ResponseEntity.ok(createdInventory);
+        SeatInventoryRecord saved = seatInventoryService.createInventory(inventory);
+        return ResponseEntity.ok(saved);
     }
     
-    @PutMapping("/{eventId}/remaining")
-    public ResponseEntity<SeatInventoryRecord> updateRemainingSeats(@PathVariable Long eventId,
-                                                                   @RequestParam Integer remainingSeats) {
-        SeatInventoryRecord updatedInventory = inventoryService.updateRemainingSeats(eventId, remainingSeats);
-        return ResponseEntity.ok(updatedInventory);
-    }
-    
-    @GetMapping("/event/{eventId}")
+    @GetMapping("/events/{eventId}")
     public ResponseEntity<SeatInventoryRecord> getInventoryByEvent(@PathVariable Long eventId) {
-        Optional<SeatInventoryRecord> inventory = inventoryService.getInventoryByEvent(eventId);
-        return inventory.map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-    
-    @GetMapping
-    public ResponseEntity<List<SeatInventoryRecord>> getAllInventories() {
-        List<SeatInventoryRecord> inventories = inventoryService.getAllInventories();
-        return ResponseEntity.ok(inventories);
+        SeatInventoryRecord inventory = seatInventoryService.getInventoryByEvent(eventId);
+        return ResponseEntity.ok(inventory);
     }
 }
 
