@@ -19,20 +19,27 @@ public class EventRecord {
     
     private String venue;
     
-    @Column(nullable = false)
+    @Column(name = "event_date")
     private LocalDate eventDate;
     
-    @Column(nullable = false)
+    @Column(name = "base_price")
     private Double basePrice;
     
+    @Column(name = "created_at")
     private LocalDateTime createdAt;
     
-    @Column(nullable = false)
-    private Boolean active = true;
+    private Boolean active;
     
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
+    public EventRecord() {}
+    
+    public EventRecord(String eventCode, String eventName, String venue, 
+                      LocalDate eventDate, Double basePrice) {
+        this.eventCode = eventCode;
+        this.eventName = eventName;
+        this.venue = venue;
+        this.eventDate = eventDate;
+        this.basePrice = basePrice;
+        this.active = true;
     }
     
     // Getters and Setters
@@ -59,8 +66,15 @@ public class EventRecord {
     
     public Boolean getActive() { return active; }
     public void setActive(Boolean active) { this.active = active; }
+    
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+        if (this.active == null) {
+            this.active = true;
+        }
+    }
 }
-
 
 
 

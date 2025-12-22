@@ -10,21 +10,24 @@ public class SeatInventoryRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(nullable = false)
+    @Column(name = "event_id")
     private Long eventId;
     
-    @Column(nullable = false)
+    @Column(name = "total_seats")
     private Integer totalSeats;
     
-    @Column(nullable = false)
+    @Column(name = "remaining_seats")
     private Integer remainingSeats;
     
+    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
     
-    @PrePersist
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
+    public SeatInventoryRecord() {}
+    
+    public SeatInventoryRecord(Long eventId, Integer totalSeats, Integer remainingSeats) {
+        this.eventId = eventId;
+        this.totalSeats = totalSeats;
+        this.remainingSeats = remainingSeats;
     }
     
     // Getters and Setters
@@ -42,8 +45,13 @@ public class SeatInventoryRecord {
     
     public LocalDateTime getUpdatedAt() { return updatedAt; }
     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+    
+    @PrePersist
+    @PreUpdate
+    public void prePersist() {
+        this.updatedAt = LocalDateTime.now();
+    }
 }
-
 
 
 

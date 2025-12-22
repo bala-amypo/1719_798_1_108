@@ -10,19 +10,23 @@ public class DynamicPriceRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(nullable = false)
+    @Column(name = "event_id")
     private Long eventId;
     
-    @Column(nullable = false)
+    @Column(name = "computed_price")
     private Double computedPrice;
     
+    @Column(name = "applied_rule_codes")
     private String appliedRuleCodes;
     
+    @Column(name = "computed_at")
     private LocalDateTime computedAt;
     
-    @PrePersist
-    protected void onCreate() {
-        computedAt = LocalDateTime.now();
+    public DynamicPriceRecord() {}
+    
+    public DynamicPriceRecord(Long eventId, Double computedPrice) {
+        this.eventId = eventId;
+        this.computedPrice = computedPrice;
     }
     
     // Getters and Setters
@@ -40,8 +44,12 @@ public class DynamicPriceRecord {
     
     public LocalDateTime getComputedAt() { return computedAt; }
     public void setComputedAt(LocalDateTime computedAt) { this.computedAt = computedAt; }
+    
+    @PrePersist
+    public void prePersist() {
+        this.computedAt = LocalDateTime.now();
+    }
 }
-
 
 
 

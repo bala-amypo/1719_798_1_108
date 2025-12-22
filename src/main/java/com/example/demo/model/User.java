@@ -1,6 +1,7 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
@@ -21,6 +22,18 @@ public class User {
     @Column(nullable = false)
     private String role;
     
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
+    
+    public User() {}
+    
+    public User(String fullName, String email, String password, String role) {
+        this.fullName = fullName;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
+    
     // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
@@ -36,9 +49,15 @@ public class User {
     
     public String getRole() { return role; }
     public void setRole(String role) { this.role = role; }
+    
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
+    }
 }
-
-
 
 
 

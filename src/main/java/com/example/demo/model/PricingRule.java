@@ -1,7 +1,6 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "pricing_rules")
@@ -15,23 +14,27 @@ public class PricingRule {
     
     private String description;
     
+    @Column(name = "min_remaining_seats")
     private Integer minRemainingSeats;
     
+    @Column(name = "max_remaining_seats")
     private Integer maxRemainingSeats;
     
+    @Column(name = "days_before_event")
     private Integer daysBeforeEvent;
     
-    @Column(nullable = false)
+    @Column(name = "price_multiplier")
     private Double priceMultiplier;
     
-    @Column(nullable = false)
-    private Boolean active = true;
+    private Boolean active;
     
-    private LocalDateTime createdAt;
+    public PricingRule() {}
     
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
+    public PricingRule(String ruleCode, String description, Double priceMultiplier) {
+        this.ruleCode = ruleCode;
+        this.description = description;
+        this.priceMultiplier = priceMultiplier;
+        this.active = true;
     }
     
     // Getters and Setters
@@ -58,12 +61,7 @@ public class PricingRule {
     
     public Boolean getActive() { return active; }
     public void setActive(Boolean active) { this.active = active; }
-    
-    public LocalDateTime getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }
-
-
 
 
 
