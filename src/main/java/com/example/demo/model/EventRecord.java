@@ -7,27 +7,24 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "event_records")
 public class EventRecord {
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(name = "event_code", unique = true, nullable = false)
+    @Column(unique = true, nullable = false)
     private String eventCode;
     
-    @Column(name = "event_name", nullable = false)
+    @Column(nullable = false)
     private String eventName;
     
-    @Column(nullable = false)
     private String venue;
     
-    @Column(name = "event_date", nullable = false)
+    @Column(nullable = false)
     private LocalDate eventDate;
     
-    @Column(name = "base_price", nullable = false)
+    @Column(nullable = false)
     private Double basePrice;
     
-    @Column(name = "created_at")
     private LocalDateTime createdAt;
     
     @Column(nullable = false)
@@ -38,82 +35,30 @@ public class EventRecord {
         createdAt = LocalDateTime.now();
     }
     
-    // Constructors
-    public EventRecord() {}
-    
-    public EventRecord(String eventCode, String eventName, String venue, 
-                      LocalDate eventDate, Double basePrice) {
-        this.eventCode = eventCode;
-        this.eventName = eventName;
-        this.venue = venue;
-        this.eventDate = eventDate;
-        this.basePrice = basePrice;
-    }
-    
     // Getters and Setters
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
     
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String getEventCode() { return eventCode; }
+    public void setEventCode(String eventCode) { this.eventCode = eventCode; }
     
-    public String getEventCode() {
-        return eventCode;
-    }
+    public String getEventName() { return eventName; }
+    public void setEventName(String eventName) { this.eventName = eventName; }
     
-    public void setEventCode(String eventCode) {
-        this.eventCode = eventCode;
-    }
+    public String getVenue() { return venue; }
+    public void setVenue(String venue) { this.venue = venue; }
     
-    public String getEventName() {
-        return eventName;
-    }
+    public LocalDate getEventDate() { return eventDate; }
+    public void setEventDate(LocalDate eventDate) { this.eventDate = eventDate; }
     
-    public void setEventName(String eventName) {
-        this.eventName = eventName;
-    }
+    public Double getBasePrice() { return basePrice; }
+    public void setBasePrice(Double basePrice) { this.basePrice = basePrice; }
     
-    public String getVenue() {
-        return venue;
-    }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     
-    public void setVenue(String venue) {
-        this.venue = venue;
-    }
-    
-    public LocalDate getEventDate() {
-        return eventDate;
-    }
-    
-    public void setEventDate(LocalDate eventDate) {
-        this.eventDate = eventDate;
-    }
-    
-    public Double getBasePrice() {
-        return basePrice;
-    }
-    
-    public void setBasePrice(Double basePrice) {
-        this.basePrice = basePrice;
-    }
-    
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-    
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-    
-    public Boolean getActive() {
-        return active;
-    }
-    
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
 }
 
 
