@@ -6,24 +6,20 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "price_adjustment_logs")
 public class PriceAdjustmentLog {
-    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(name = "event_id", nullable = false)
+    @Column(nullable = false)
     private Long eventId;
     
-    @Column(name = "old_price", nullable = false)
     private Double oldPrice;
     
-    @Column(name = "new_price", nullable = false)
+    @Column(nullable = false)
     private Double newPrice;
     
-    @Column(nullable = false)
     private String reason;
     
-    @Column(name = "changed_at")
     private LocalDateTime changedAt;
     
     @PrePersist
@@ -31,64 +27,24 @@ public class PriceAdjustmentLog {
         changedAt = LocalDateTime.now();
     }
     
-    // Constructors
-    public PriceAdjustmentLog() {}
-    
-    public PriceAdjustmentLog(Long eventId, Double oldPrice, Double newPrice, String reason) {
-        this.eventId = eventId;
-        this.oldPrice = oldPrice;
-        this.newPrice = newPrice;
-        this.reason = reason;
-    }
-    
     // Getters and Setters
-    public Long getId() {
-        return id;
-    }
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
     
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Long getEventId() { return eventId; }
+    public void setEventId(Long eventId) { this.eventId = eventId; }
     
-    public Long getEventId() {
-        return eventId;
-    }
+    public Double getOldPrice() { return oldPrice; }
+    public void setOldPrice(Double oldPrice) { this.oldPrice = oldPrice; }
     
-    public void setEventId(Long eventId) {
-        this.eventId = eventId;
-    }
+    public Double getNewPrice() { return newPrice; }
+    public void setNewPrice(Double newPrice) { this.newPrice = newPrice; }
     
-    public Double getOldPrice() {
-        return oldPrice;
-    }
+    public String getReason() { return reason; }
+    public void setReason(String reason) { this.reason = reason; }
     
-    public void setOldPrice(Double oldPrice) {
-        this.oldPrice = oldPrice;
-    }
-    
-    public Double getNewPrice() {
-        return newPrice;
-    }
-    
-    public void setNewPrice(Double newPrice) {
-        this.newPrice = newPrice;
-    }
-    
-    public String getReason() {
-        return reason;
-    }
-    
-    public void setReason(String reason) {
-        this.reason = reason;
-    }
-    
-    public LocalDateTime getChangedAt() {
-        return changedAt;
-    }
-    
-    public void setChangedAt(LocalDateTime changedAt) {
-        this.changedAt = changedAt;
-    }
+    public LocalDateTime getChangedAt() { return changedAt; }
+    public void setChangedAt(LocalDateTime changedAt) { this.changedAt = changedAt; }
 }
 
 

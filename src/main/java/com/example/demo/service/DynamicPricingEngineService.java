@@ -35,94 +35,85 @@ public class DynamicPricingEngineService {
     
     @Transactional
     public DynamicPriceRecord computeDynamicPrice(Long eventId) {
-        // Fetch event
+        // 1. Fetch and validate event
         EventRecord event = eventRecordRepository.findById(eventId)
             .orElseThrow(() -> new BadRequestException("Event not found"));
         
-        // Check if event is active
         if (!event.getActive()) {
             throw new BadRequestException("Event is not active");
         }
         
-        // Fetch inventory
-        SeatInventoryRecord inventory = seatInventoryRecordRepository
-            .findByEventId(eventId)
+        // 2. Fetch inventory
+        SeatInventoryRecord inventory = seatInventoryRecordRepository.findByEventId(eventId)
             .orElseThrow(() -> new BadRequestException("Seat inventory not found"));
         
-        // Get active pricing rules
+        // 3. Get active pricing rules
         List<PricingRule> activeRules = pricingRuleRepository.findByActiveTrue();
         
-        // Calculate days before event
+        // 4. Calculate days before event
         long daysBeforeEvent = ChronoUnit.DAYS.between(LocalDate.now(), event.getEventDate());
         
-        // Apply matching rules
-        List<String> appliedRuleCodes = new ArrayList<>();
+        // 5. Apply matching rules
         double computedPrice = event.getBasePrice();
+        List<String> appliedRuleCodes = new ArrayList<>();
         
         for (PricingRule rule : activeRules) {
-            boolean matches = true;
-            
-            // Check seat range
-            if (rule.getMinRemainingSeats() != null) {
-                if (inventory.getRemainingSeats() < rule.getMinRemainingSeats()) {
-                    matches = false;
-                }
-            }
-            
-            if (rule.getMaxRemainingSeats() != null && matches) {
-                if (inventory.getRemainingSeats() > rule.getMaxRemainingSeats()) {
-                    matches = false;
-                }
-            }
-            
-            // Check days before event
-            if (rule.getDaysBeforeEvent() != null && matches) {
-                if (daysBeforeEvent > rule.getDaysBeforeEvent()) {
-                    matches = false;
-                }
-            }
-            
-            if (matches) {
-                appliedRuleCodes.add(rule.getRuleCode());
+            if (matchesRule(rule, inventory.getRemainingSeats(), daysBeforeEvent)) {
                 computedPrice *= rule.getPriceMultiplier();
+                appliedRuleCodes.add(rule.getRuleCode());
             }
         }
         
-        // Round to 2 decimal places
-        computedPrice = Math.round(computedPrice * 100.0) / 100.0;
-        
-        // Validate computed price
+        // 6. Validate computed price
         if (computedPrice <= 0) {
             throw new BadRequestException("Computed price must be > 0");
         }
         
-        // Create DynamicPriceRecord
+        // 7. Get previous price
+        Double previousPrice = null;
+        Optional<DynamicPriceRecord> latestPrice = dynamicPriceRecordRepository
+            .findFirstByEventIdOrderByComputedAtDesc(eventId);
+        
+        if (latestPrice.isPresent()) {
+            previousPrice = latestPrice.get().getComputedPrice();
+        }
+        
+        // 8. Save dynamic price record
         DynamicPriceRecord priceRecord = new DynamicPriceRecord();
         priceRecord.setEventId(eventId);
         priceRecord.setComputedPrice(computedPrice);
         priceRecord.setAppliedRuleCodes(String.join(",", appliedRuleCodes));
         DynamicPriceRecord savedRecord = dynamicPriceRecordRepository.save(priceRecord);
         
-        // Check for price change and log if material
-        Optional<DynamicPriceRecord> latestPrice = dynamicPriceRecordRepository
-            .findFirstByEventIdOrderByComputedAtDesc(eventId);
-        
-        if (latestPrice.isPresent() && latestPrice.get().getId() != null) {
-            double oldPrice = latestPrice.get().getComputedPrice();
-            double newPrice = savedRecord.getComputedPrice();
-            
-            // Log if price changed by more than 1%
-            if (Math.abs(newPrice - oldPrice) / oldPrice > 0.01) {
-                PriceAdjustmentLog log = new PriceAdjustmentLog();
-                log.setEventId(eventId);
-                log.setOldPrice(oldPrice);
-                log.setNewPrice(newPrice);
-                log.setReason("Dynamic pricing adjustment based on seat availability and timing");
-                priceAdjustmentLogRepository.save(log);
-            }
+        // 9. Log adjustment if price changed materially (more than 1%)
+        if (previousPrice != null && Math.abs(computedPrice - previousPrice) / previousPrice > 0.01) {
+            PriceAdjustmentLog log = new PriceAdjustmentLog();
+            log.setEventId(eventId);
+            log.setOldPrice(previousPrice);
+            log.setNewPrice(computedPrice);
+            log.setReason("Dynamic pricing adjustment based on " + appliedRuleCodes.size() + " rules");
+            priceAdjustmentLogRepository.save(log);
         }
         
         return savedRecord;
+    }
+    
+    private boolean matchesRule(PricingRule rule, int remainingSeats, long daysBeforeEvent) {
+        boolean matches = true;
+        
+        if (rule.getMinRemainingSeats() != null) {
+            matches = matches && remainingSeats >= rule.getMinRemainingSeats();
+        }
+        
+        if (rule.getMaxRemainingSeats() != null) {
+            matches = matches && remainingSeats <= rule.getMaxRemainingSeats();
+        }
+        
+        if (rule.getDaysBeforeEvent() != null) {
+            matches = matches && daysBeforeEvent <= rule.getDaysBeforeEvent();
+        }
+        
+        return matches;
     }
     
     public List<DynamicPriceRecord> getPriceHistory(Long eventId) {
@@ -137,7 +128,6 @@ public class DynamicPricingEngineService {
         return dynamicPriceRecordRepository.findAll();
     }
 }
-
 
 
 

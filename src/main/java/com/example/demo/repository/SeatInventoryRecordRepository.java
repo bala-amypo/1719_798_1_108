@@ -17,7 +17,6 @@ public interface SeatInventoryRecordRepository extends JpaRepository<SeatInvento
 
 
 
-
 // package com.example.demo.repository;
 
 // import com.example.demo.model.SeatInventoryRecord;
