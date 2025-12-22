@@ -14,7 +14,6 @@ public interface EventRecordRepository extends JpaRepository<EventRecord, Long> 
 
 
 
-
 // package com.example.demo.repository;
 
 // import com.example.demo.model.EventRecord;

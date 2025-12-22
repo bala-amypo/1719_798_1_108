@@ -15,7 +15,6 @@ public interface PricingRuleRepository extends JpaRepository<PricingRule, Long> 
 
 
 
-
 // package com.example.demo.repository;
 
 // import com.example.demo.model.PricingRule;

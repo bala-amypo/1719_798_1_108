@@ -17,7 +17,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 
 
-
 // package com.example.demo.repository;
 
 // import com.example.demo.model.User;
