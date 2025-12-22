@@ -40,4 +40,3 @@ public class DynamicPriceController {
         return ResponseEntity.ok(allPrices);
     }
 }
-
