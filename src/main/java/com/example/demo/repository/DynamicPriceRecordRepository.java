@@ -16,8 +16,6 @@ public interface DynamicPriceRecordRepository extends JpaRepository<DynamicPrice
 
 
 
-
-
 // package com.example.demo.repository;
 
 // import com.example.demo.model.DynamicPriceRecord;

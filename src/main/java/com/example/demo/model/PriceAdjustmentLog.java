@@ -10,21 +10,27 @@ public class PriceAdjustmentLog {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(nullable = false)
+    @Column(name = "event_id")
     private Long eventId;
     
+    @Column(name = "old_price")
     private Double oldPrice;
     
-    @Column(nullable = false)
+    @Column(name = "new_price")
     private Double newPrice;
     
     private String reason;
     
+    @Column(name = "changed_at")
     private LocalDateTime changedAt;
     
-    @PrePersist
-    protected void onCreate() {
-        changedAt = LocalDateTime.now();
+    public PriceAdjustmentLog() {}
+    
+    public PriceAdjustmentLog(Long eventId, Double oldPrice, Double newPrice, String reason) {
+        this.eventId = eventId;
+        this.oldPrice = oldPrice;
+        this.newPrice = newPrice;
+        this.reason = reason;
     }
     
     // Getters and Setters
@@ -45,8 +51,12 @@ public class PriceAdjustmentLog {
     
     public LocalDateTime getChangedAt() { return changedAt; }
     public void setChangedAt(LocalDateTime changedAt) { this.changedAt = changedAt; }
+    
+    @PrePersist
+    public void prePersist() {
+        this.changedAt = LocalDateTime.now();
+    }
 }
-
 
 
 
