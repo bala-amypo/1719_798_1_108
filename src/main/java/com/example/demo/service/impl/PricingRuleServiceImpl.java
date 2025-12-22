@@ -1,30 +1,32 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.exception.BadRequestException;
 import com.example.demo.model.PricingRule;
 import com.example.demo.repository.PricingRuleRepository;
 import com.example.demo.service.PricingRuleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class PricingRuleServiceImpl implements PricingRuleService {
+public class PricingRuleImpl implements PricingRuleService {
     
     private final PricingRuleRepository pricingRuleRepository;
     
-    public PricingRuleServiceImpl(PricingRuleRepository pricingRuleRepository) {
+    @Autowired
+    public PricingRuleImpl(PricingRuleRepository pricingRuleRepository) {
         this.pricingRuleRepository = pricingRuleRepository;
     }
     
     @Override
     public PricingRule createRule(PricingRule rule) {
-        if (rule.getPriceMultiplier() <= 0) {
-            throw new BadRequestException("Price multiplier must be > 0");
+        // Check for duplicate rule code
+        if (pricingRuleRepository.existsByRuleCode(rule.getRuleCode())) {
+            throw new RuntimeException("Rule code already exists");
         }
         
-        if (pricingRuleRepository.existsByRuleCode(rule.getRuleCode())) {
-            throw new BadRequestException("Rule code already exists");
+        // Validate multiplier
+        if (rule.getPriceMultiplier() == null || rule.getPriceMultiplier() <= 0) {
+            throw new RuntimeException("Price multiplier must be > 0");
         }
         
         return pricingRuleRepository.save(rule);
@@ -33,18 +35,32 @@ public class PricingRuleServiceImpl implements PricingRuleService {
     @Override
     public PricingRule updateRule(Long id, PricingRule updatedRule) {
         PricingRule existingRule = pricingRuleRepository.findById(id)
-            .orElseThrow(() -> new BadRequestException("Rule not found"));
+                .orElseThrow(() -> new RuntimeException("Pricing rule not found"));
         
+        // Validate multiplier if provided
         if (updatedRule.getPriceMultiplier() != null && updatedRule.getPriceMultiplier() <= 0) {
-            throw new BadRequestException("Price multiplier must be > 0");
+            throw new RuntimeException("Price multiplier must be > 0");
         }
         
-        existingRule.setDescription(updatedRule.getDescription());
-        existingRule.setMinRemainingSeats(updatedRule.getMinRemainingSeats());
-        existingRule.setMaxRemainingSeats(updatedRule.getMaxRemainingSeats());
-        existingRule.setDaysBeforeEvent(updatedRule.getDaysBeforeEvent());
-        existingRule.setPriceMultiplier(updatedRule.getPriceMultiplier());
-        existingRule.setActive(updatedRule.getActive());
+        // Update fields
+        if (updatedRule.getDescription() != null) {
+            existingRule.setDescription(updatedRule.getDescription());
+        }
+        if (updatedRule.getMinRemainingSeats() != null) {
+            existingRule.setMinRemainingSeats(updatedRule.getMinRemainingSeats());
+        }
+        if (updatedRule.getMaxRemainingSeats() != null) {
+            existingRule.setMaxRemainingSeats(updatedRule.getMaxRemainingSeats());
+        }
+        if (updatedRule.getDaysBeforeEvent() != null) {
+            existingRule.setDaysBeforeEvent(updatedRule.getDaysBeforeEvent());
+        }
+        if (updatedRule.getPriceMultiplier() != null) {
+            existingRule.setPriceMultiplier(updatedRule.getPriceMultiplier());
+        }
+        if (updatedRule.getActive() != null) {
+            existingRule.setActive(updatedRule.getActive());
+        }
         
         return pricingRuleRepository.save(existingRule);
     }
@@ -55,18 +71,13 @@ public class PricingRuleServiceImpl implements PricingRuleService {
     }
     
     @Override
-    public Optional<PricingRule> getRuleByCode(String ruleCode) {
+    public PricingRule getRuleByCode(String ruleCode) {
         return pricingRuleRepository.findByRuleCode(ruleCode);
     }
     
     @Override
     public List<PricingRule> getAllRules() {
         return pricingRuleRepository.findAll();
-    }
-    
-    @Override
-    public Optional<PricingRule> getRuleById(Long id) {
-        return pricingRuleRepository.findById(id);
     }
 }
 

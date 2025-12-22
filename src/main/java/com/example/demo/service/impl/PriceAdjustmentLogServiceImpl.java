@@ -3,37 +3,33 @@ package com.example.demo.service.impl;
 import com.example.demo.model.PriceAdjustmentLog;
 import com.example.demo.repository.PriceAdjustmentLogRepository;
 import com.example.demo.service.PriceAdjustmentLogService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
 
 @Service
-public class PriceAdjustmentLogServiceImpl implements PriceAdjustmentLogService {
+public class PriceAdjustmentLogImpl implements PriceAdjustmentLogService {
     
-    private final PriceAdjustmentLogRepository priceAdjustmentLogRepository;
+    private final PriceAdjustmentLogRepository adjustmentLogRepository;
     
-    public PriceAdjustmentLogServiceImpl(PriceAdjustmentLogRepository priceAdjustmentLogRepository) {
-        this.priceAdjustmentLogRepository = priceAdjustmentLogRepository;
+    @Autowired
+    public PriceAdjustmentLogImpl(PriceAdjustmentLogRepository adjustmentLogRepository) {
+        this.adjustmentLogRepository = adjustmentLogRepository;
     }
     
     @Override
     public PriceAdjustmentLog logAdjustment(PriceAdjustmentLog log) {
-        return priceAdjustmentLogRepository.save(log);
+        return adjustmentLogRepository.save(log);
     }
     
     @Override
     public List<PriceAdjustmentLog> getAdjustmentsByEvent(Long eventId) {
-        return priceAdjustmentLogRepository.findByEventId(eventId);
+        return adjustmentLogRepository.findByEventId(eventId);
     }
     
     @Override
     public List<PriceAdjustmentLog> getAllAdjustments() {
-        return priceAdjustmentLogRepository.findAll();
-    }
-    
-    @Override
-    public Optional<PriceAdjustmentLog> getAdjustmentById(Long id) {
-        return priceAdjustmentLogRepository.findById(id);
+        return adjustmentLogRepository.findAll();
     }
 }
 

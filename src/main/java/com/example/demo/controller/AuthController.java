@@ -1,9 +1,8 @@
 package com.example.demo.controller;
 
-import com.example.demo.exception.BadRequestException;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
-import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
@@ -11,24 +10,20 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/auth")
-@Tag(name = "Authentication", description = "Endpoints for user authentication")
 public class AuthController {
     
-    private final UserService userService;
-    
-    public AuthController(UserService userService) {
-        this.userService = userService;
-    }
+    @Autowired
+    private UserService userService;
     
     @PostMapping("/register")
-    public ResponseEntity<Map<String, String>> register(@RequestBody User user) {
-        // Set default role if not provided
-        if (user.getRole() == null || user.getRole().isEmpty()) {
-            user.setRole("USER");
+    public ResponseEntity<?> register(@RequestBody User user) {
+        if (userService.existsByEmail(user.getEmail())) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Email already exists");
+            return ResponseEntity.badRequest().body(response);
         }
         
         User savedUser = userService.save(user);
-        
         Map<String, String> response = new HashMap<>();
         response.put("message", "User registered successfully");
         response.put("userId", savedUser.getId().toString());
@@ -36,23 +31,22 @@ public class AuthController {
     }
     
     @PostMapping("/login")
-    public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> credentials) {
+    public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
         String email = credentials.get("email");
         String password = credentials.get("password");
         
-        User user = userService.findByEmail(email)
-            .orElseThrow(() -> new BadRequestException("Invalid credentials"));
+        User user = userService.findByEmail(email);
         
-        // Simple password check
-        if (!password.equals(user.getPassword())) {
-            throw new BadRequestException("Invalid credentials");
+        if (user == null || !user.getPassword().equals(password)) {
+            Map<String, String> response = new HashMap<>();
+            response.put("error", "Invalid email or password");
+            return ResponseEntity.badRequest().body(response);
         }
         
         Map<String, String> response = new HashMap<>();
         response.put("message", "Login successful");
+        response.put("userId", user.getId().toString());
         response.put("role", user.getRole());
-        response.put("email", user.getEmail());
-        response.put("fullName", user.getFullName());
         return ResponseEntity.ok(response);
     }
 }
