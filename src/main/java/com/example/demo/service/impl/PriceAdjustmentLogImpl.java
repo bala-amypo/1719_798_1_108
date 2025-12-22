@@ -32,11 +32,11 @@ public class PriceAdjustmentLogImpl implements PriceAdjustmentLogService {
         return adjustmentLogRepository.findAll();
     }
 
-    @Override
-    public Optional<PriceAdjustmentLog> getAdjustmentById(Long id)
-    {
+    // @Override
+    // public Optional<PriceAdjustmentLog> getAdjustmentById(Long id)
+    // {
         
-    }
+    // }
 }
 
 
