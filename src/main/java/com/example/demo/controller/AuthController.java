@@ -2,11 +2,9 @@ package com.example.demo.controller;
 
 import com.example.demo.exception.BadRequestException;
 import com.example.demo.model.User;
-import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,15 +15,9 @@ import java.util.Map;
 public class AuthController {
     
     private final UserService userService;
-    private final JwtTokenProvider jwtTokenProvider;
-    private final PasswordEncoder passwordEncoder;
     
-    public AuthController(UserService userService, 
-                         JwtTokenProvider jwtTokenProvider,
-                         PasswordEncoder passwordEncoder) {
+    public AuthController(UserService userService) {
         this.userService = userService;
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.passwordEncoder = passwordEncoder;
     }
     
     @PostMapping("/register")
@@ -35,8 +27,6 @@ public class AuthController {
             user.setRole("USER");
         }
         
-        // Encode password before saving
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
         User savedUser = userService.save(user);
         
         Map<String, String> response = new HashMap<>();
@@ -53,21 +43,19 @@ public class AuthController {
         User user = userService.findByEmail(email)
             .orElseThrow(() -> new BadRequestException("Invalid credentials"));
         
-        if (!passwordEncoder.matches(password, user.getPassword())) {
+        // Simple password check
+        if (!password.equals(user.getPassword())) {
             throw new BadRequestException("Invalid credentials");
         }
         
-        String token = jwtTokenProvider.createToken(user.getEmail(), user.getRole());
-        
         Map<String, String> response = new HashMap<>();
-        response.put("token", token);
+        response.put("message", "Login successful");
         response.put("role", user.getRole());
         response.put("email", user.getEmail());
         response.put("fullName", user.getFullName());
         return ResponseEntity.ok(response);
     }
 }
-
 
 
 
