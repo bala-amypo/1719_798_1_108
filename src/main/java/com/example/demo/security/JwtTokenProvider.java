@@ -1,23 +1,25 @@
-package com.example.demo.security;
+package com.example.demo.config;
 
-import org.springframework.stereotype.Component;
+import com.example.demo.security.JwtTokenProvider;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
-@Component
-public class JwtTokenProvider {
+@Configuration
+public class JwtTokenProviderConfig {
     
-    private final String secret;
-    private final long validityInMs;
-    private final boolean someFlag;
+    @Value("${jwt.secret}")
+    private String secret;
     
-    public JwtTokenProvider(String secret, long validityInMs, boolean someFlag) {
-        this.secret = secret;
-        this.validityInMs = validityInMs;
-        this.someFlag = someFlag;
+    @Value("${jwt.expiration}")
+    private long expiration;
+    
+    @Bean
+    public JwtTokenProvider jwtTokenProvider() {
+        // Using false as the third parameter to match constructor signature
+        return new JwtTokenProvider(secret, expiration, false);
     }
-    
-    // Empty class - just meets constructor requirement
 }
-
 
 // package com.example.demo.security;
 
