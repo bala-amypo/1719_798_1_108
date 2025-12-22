@@ -9,49 +9,100 @@ public class SeatInventoryRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @Column(name = "event_id")
+
+    @Column(nullable = false)
     private Long eventId;
-    
-    @Column(name = "total_seats")
+
+    @Column(nullable = false)
     private Integer totalSeats;
-    
-    @Column(name = "remaining_seats")
+
+    @Column(nullable = false)
     private Integer remainingSeats;
-    
-    @Column(name = "updated_at")
+
+    @Column(updatable = false)
+    private LocalDateTime createdAt;
+
     private LocalDateTime updatedAt;
-    
-    public SeatInventoryRecord() {}
-    
-    public SeatInventoryRecord(Long eventId, Integer totalSeats, Integer remainingSeats) {
-        this.eventId = eventId;
-        this.totalSeats = totalSeats;
-        this.remainingSeats = remainingSeats;
+
+    @PrePersist
+    protected void prePersist() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
     }
-    
+
+    @PreUpdate
+    protected void preUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
+
     // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
-    
     public Long getEventId() { return eventId; }
     public void setEventId(Long eventId) { this.eventId = eventId; }
-    
     public Integer getTotalSeats() { return totalSeats; }
     public void setTotalSeats(Integer totalSeats) { this.totalSeats = totalSeats; }
-    
     public Integer getRemainingSeats() { return remainingSeats; }
     public void setRemainingSeats(Integer remainingSeats) { this.remainingSeats = remainingSeats; }
-    
+    public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
-    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
-    
-    @PrePersist
-    @PreUpdate
-    public void prePersist() {
-        this.updatedAt = LocalDateTime.now();
-    }
 }
+
+
+// package com.example.demo.model;
+
+// import jakarta.persistence.*;
+// import java.time.LocalDateTime;
+
+// @Entity
+// @Table(name = "seat_inventory_records")
+// public class SeatInventoryRecord {
+//     @Id
+//     @GeneratedValue(strategy = GenerationType.IDENTITY)
+//     private Long id;
+    
+//     @Column(name = "event_id")
+//     private Long eventId;
+    
+//     @Column(name = "total_seats")
+//     private Integer totalSeats;
+    
+//     @Column(name = "remaining_seats")
+//     private Integer remainingSeats;
+    
+//     @Column(name = "updated_at")
+//     private LocalDateTime updatedAt;
+    
+//     public SeatInventoryRecord() {}
+    
+//     public SeatInventoryRecord(Long eventId, Integer totalSeats, Integer remainingSeats) {
+//         this.eventId = eventId;
+//         this.totalSeats = totalSeats;
+//         this.remainingSeats = remainingSeats;
+//     }
+    
+//     // Getters and Setters
+//     public Long getId() { return id; }
+//     public void setId(Long id) { this.id = id; }
+    
+//     public Long getEventId() { return eventId; }
+//     public void setEventId(Long eventId) { this.eventId = eventId; }
+    
+//     public Integer getTotalSeats() { return totalSeats; }
+//     public void setTotalSeats(Integer totalSeats) { this.totalSeats = totalSeats; }
+    
+//     public Integer getRemainingSeats() { return remainingSeats; }
+//     public void setRemainingSeats(Integer remainingSeats) { this.remainingSeats = remainingSeats; }
+    
+//     public LocalDateTime getUpdatedAt() { return updatedAt; }
+//     public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+    
+//     @PrePersist
+//     @PreUpdate
+//     public void prePersist() {
+//         this.updatedAt = LocalDateTime.now();
+//     }
+// }
 
 
 
