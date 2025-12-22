@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/price-adjustments")
-@Tag(name = "Price Adjustment Logs", description = "Endpoints for viewing price adjustment logs")
+@Tag(name = "Price Adjustment Logs", description = "APIs for viewing price adjustment logs")
 public class PriceAdjustmentLogController {
     
     private final PriceAdjustmentLogService priceAdjustmentLogService;
@@ -25,25 +25,22 @@ public class PriceAdjustmentLogController {
     }
     
     @GetMapping("/event/{eventId}")
-    public ResponseEntity<List<PriceAdjustmentLog>> getByEvent(@PathVariable Long eventId) {
-        List<PriceAdjustmentLog> logs = priceAdjustmentLogService.getAdjustmentsByEvent(eventId);
-        return ResponseEntity.ok(logs);
+    public ResponseEntity<List<PriceAdjustmentLog>> getAdjustmentsByEvent(@PathVariable Long eventId) {
+        return ResponseEntity.ok(priceAdjustmentLogService.getAdjustmentsByEvent(eventId));
     }
     
     @GetMapping
-    public ResponseEntity<List<PriceAdjustmentLog>> getAllLogs() {
-        List<PriceAdjustmentLog> allLogs = priceAdjustmentLogService.getAllAdjustments();
-        return ResponseEntity.ok(allLogs);
+    public ResponseEntity<List<PriceAdjustmentLog>> getAllAdjustments() {
+        return ResponseEntity.ok(priceAdjustmentLogService.getAllAdjustments());
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<PriceAdjustmentLog> getLogById(@PathVariable Long id) {
+    public ResponseEntity<PriceAdjustmentLog> getAdjustmentById(@PathVariable Long id) {
         return priceAdjustmentLogService.getAdjustmentById(id)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
     }
 }
-
 
 
 

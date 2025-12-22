@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/pricing-rules")
-@Tag(name = "Pricing Rule Management", description = "Endpoints for managing pricing rules")
+@Tag(name = "Pricing Rule Management", description = "APIs for managing pricing rules")
 public class PricingRuleController {
     
     private final PricingRuleService pricingRuleService;
@@ -34,19 +34,19 @@ public class PricingRuleController {
     
     @GetMapping("/active")
     public ResponseEntity<List<PricingRule>> getActiveRules() {
-        List<PricingRule> activeRules = pricingRuleService.getActiveRules();
-        return ResponseEntity.ok(activeRules);
+        return ResponseEntity.ok(pricingRuleService.getActiveRules());
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<PricingRule> getRule(@PathVariable Long id) {
-        return ResponseEntity.ok().build(); // Implement as needed
+    public ResponseEntity<PricingRule> getRuleById(@PathVariable Long id) {
+        return pricingRuleService.getRuleById(id)
+            .map(ResponseEntity::ok)
+            .orElse(ResponseEntity.notFound().build());
     }
     
     @GetMapping
     public ResponseEntity<List<PricingRule>> getAllRules() {
-        List<PricingRule> rules = pricingRuleService.getAllRules();
-        return ResponseEntity.ok(rules);
+        return ResponseEntity.ok(pricingRuleService.getAllRules());
     }
 }
 

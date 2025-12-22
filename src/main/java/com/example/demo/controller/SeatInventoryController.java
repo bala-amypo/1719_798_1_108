@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/inventory")
-@Tag(name = "Seat Inventory Management", description = "Endpoints for managing seat inventories")
+@Tag(name = "Seat Inventory Management", description = "APIs for managing seat inventories")
 public class SeatInventoryController {
     
     private final SeatInventoryService seatInventoryService;
@@ -19,22 +19,21 @@ public class SeatInventoryController {
     }
     
     @PostMapping
-    public ResponseEntity<SeatInventoryRecord> createInventory(
-            @RequestBody SeatInventoryRecord inventory) {
+    public ResponseEntity<SeatInventoryRecord> createInventory(@RequestBody SeatInventoryRecord inventory) {
         SeatInventoryRecord created = seatInventoryService.createInventory(inventory);
         return ResponseEntity.ok(created);
     }
     
     @PutMapping("/{eventId}/remaining")
-    public ResponseEntity<Void> updateRemainingSeats(
+    public ResponseEntity<SeatInventoryRecord> updateRemainingSeats(
             @PathVariable Long eventId,
             @RequestParam Integer remainingSeats) {
-        seatInventoryService.updateRemainingSeats(eventId, remainingSeats);
-        return ResponseEntity.ok().build();
+        SeatInventoryRecord updated = seatInventoryService.updateRemainingSeats(eventId, remainingSeats);
+        return ResponseEntity.ok(updated);
     }
     
     @GetMapping("/event/{eventId}")
-    public ResponseEntity<SeatInventoryRecord> getByEvent(@PathVariable Long eventId) {
+    public ResponseEntity<SeatInventoryRecord> getInventoryByEvent(@PathVariable Long eventId) {
         return seatInventoryService.getInventoryByEvent(eventId)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
@@ -42,11 +41,9 @@ public class SeatInventoryController {
     
     @GetMapping
     public ResponseEntity<List<SeatInventoryRecord>> getAllInventories() {
-        List<SeatInventoryRecord> inventories = seatInventoryService.getAllInventories();
-        return ResponseEntity.ok(inventories);
+        return ResponseEntity.ok(seatInventoryService.getAllInventories());
     }
 }
-
 
 
 

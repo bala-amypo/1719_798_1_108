@@ -5,18 +5,22 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 @WebServlet(urlPatterns = "/hello-servlet")
 public class HelloServlet extends HttpServlet {
     
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) 
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) 
             throws IOException {
-        resp.setContentType("text/plain");
-        resp.getWriter().write("Hello from Dynamic Event Ticket Pricing Servlet");
+        response.setContentType("text/plain");
+        response.setCharacterEncoding("UTF-8");
+        
+        PrintWriter out = response.getWriter();
+        out.print("Hello from Dynamic Event Ticket Pricing Servlet");
+        out.flush();
     }
 }
-
 
 
 

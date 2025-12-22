@@ -1,7 +1,6 @@
 package com.example.demo.security;
 
 import org.springframework.stereotype.Component;
-import java.util.Date;
 
 @Component
 public class JwtTokenProvider {
@@ -16,31 +15,8 @@ public class JwtTokenProvider {
         this.someFlag = someFlag;
     }
     
-    // Simplified constructor for now
-    public JwtTokenProvider() {
-        this("your-secret-key", 3600000, false);
-    }
-    
-    public String createToken(String username, String role) {
-        // Simplified token creation - in production, use proper JWT library
-        return "dummy-token-" + username + "-" + role + "-" + System.currentTimeMillis();
-    }
-    
-    public String getUsername(String token) {
-        // Simplified token parsing
-        if (token.startsWith("dummy-token-")) {
-            String[] parts = token.split("-");
-            if (parts.length > 2) {
-                return parts[2];
-            }
-        }
-        return null;
-    }
-    
-    public boolean validateToken(String token) {
-        // Simplified validation
-        return token != null && token.startsWith("dummy-token-");
-    }
+    // Other JWT methods would go here
+    // This is just a stub to meet the constructor requirement
 }
 
 

@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/dynamic-pricing")
-@Tag(name = "Dynamic Pricing", description = "Endpoints for dynamic price computation")
+@Tag(name = "Dynamic Pricing Engine", description = "APIs for computing and retrieving dynamic prices")
 public class DynamicPricingController {
     
     private final DynamicPricingEngineService dynamicPricingEngineService;
@@ -19,9 +19,9 @@ public class DynamicPricingController {
     }
     
     @PostMapping("/compute/{eventId}")
-    public ResponseEntity<DynamicPriceRecord> computePrice(@PathVariable Long eventId) {
-        DynamicPriceRecord result = dynamicPricingEngineService.computeDynamicPrice(eventId);
-        return ResponseEntity.ok(result);
+    public ResponseEntity<DynamicPriceRecord> computeDynamicPrice(@PathVariable Long eventId) {
+        DynamicPriceRecord computed = dynamicPricingEngineService.computeDynamicPrice(eventId);
+        return ResponseEntity.ok(computed);
     }
     
     @GetMapping("/latest/{eventId}")
@@ -33,14 +33,12 @@ public class DynamicPricingController {
     
     @GetMapping("/history/{eventId}")
     public ResponseEntity<List<DynamicPriceRecord>> getPriceHistory(@PathVariable Long eventId) {
-        List<DynamicPriceRecord> history = dynamicPricingEngineService.getPriceHistory(eventId);
-        return ResponseEntity.ok(history);
+        return ResponseEntity.ok(dynamicPricingEngineService.getPriceHistory(eventId));
     }
     
     @GetMapping
     public ResponseEntity<List<DynamicPriceRecord>> getAllComputedPrices() {
-        List<DynamicPriceRecord> allPrices = dynamicPricingEngineService.getAllComputedPrices();
-        return ResponseEntity.ok(allPrices);
+        return ResponseEntity.ok(dynamicPricingEngineService.getAllComputedPrices());
     }
 }
 

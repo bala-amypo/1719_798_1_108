@@ -9,7 +9,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/events")
-@Tag(name = "Event Management", description = "Endpoints for managing events")
+@Tag(name = "Event Management", description = "APIs for managing events")
 public class EventRecordController {
     
     private final EventRecordService eventRecordService;
@@ -25,7 +25,7 @@ public class EventRecordController {
     }
     
     @GetMapping("/{id}")
-    public ResponseEntity<EventRecord> getEvent(@PathVariable Long id) {
+    public ResponseEntity<EventRecord> getEventById(@PathVariable Long id) {
         return eventRecordService.getEventById(id)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
@@ -33,20 +33,19 @@ public class EventRecordController {
     
     @GetMapping
     public ResponseEntity<List<EventRecord>> getAllEvents() {
-        List<EventRecord> events = eventRecordService.getAllEvents();
-        return ResponseEntity.ok(events);
+        return ResponseEntity.ok(eventRecordService.getAllEvents());
     }
     
     @PutMapping("/{id}/status")
-    public ResponseEntity<Void> updateEventStatus(
+    public ResponseEntity<EventRecord> updateEventStatus(
             @PathVariable Long id,
             @RequestParam boolean active) {
-        eventRecordService.updateEventStatus(id, active);
-        return ResponseEntity.ok().build();
+        EventRecord updated = eventRecordService.updateEventStatus(id, active);
+        return ResponseEntity.ok(updated);
     }
     
     @GetMapping("/lookup/{eventCode}")
-    public ResponseEntity<EventRecord> lookupByCode(@PathVariable String eventCode) {
+    public ResponseEntity<EventRecord> getEventByCode(@PathVariable String eventCode) {
         return eventRecordService.getEventByCode(eventCode)
             .map(ResponseEntity::ok)
             .orElse(ResponseEntity.notFound().build());
