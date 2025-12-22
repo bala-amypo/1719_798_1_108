@@ -7,6 +7,16 @@ public class BadRequestException extends RuntimeException {
 }
 
 
+
+// package com.example.demo.exception;
+
+// public class BadRequestException extends RuntimeException {
+//     public BadRequestException(String message) {
+//         super(message);
+//     }
+// }
+
+
 // package com.example.demo.exception;
 
 // public class BadRequestException extends RuntimeException {
