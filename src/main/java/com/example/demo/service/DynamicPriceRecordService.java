@@ -1,14 +1,15 @@
 package com.example.demo.service;
 
-import com.example.demo.model.PriceAdjustmentLog;
+import com.example.demo.model.DynamicPriceRecord;
 import java.util.List;
+import java.util.Optional;
 
-public interface PriceAdjustmentLogService {
-    PriceAdjustmentLog logAdjustment(PriceAdjustmentLog log);
-    List<PriceAdjustmentLog> getAdjustmentsByEvent(Long eventId);
-    List<PriceAdjustmentLog> getAllAdjustments();
+public interface DynamicPriceRecordService {
+    DynamicPriceRecord computeDynamicPrice(Long eventId);
+    List<DynamicPriceRecord> getPriceHistory(Long eventId);
+    Optional<DynamicPriceRecord> getLatestPrice(Long eventId);
+    List<DynamicPriceRecord> getAllComputedPrices();
 }
-
 
 // package com.example.demo.service;
 
