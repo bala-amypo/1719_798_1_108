@@ -26,11 +26,7 @@ public class PricingRuleServiceImpl implements PricingRuleService {
     
     @Override
     public List<PricingRule> getActiveRules() {
-        // Simple implementation - filter in memory
-        // Or add findByIsActive(true) to your repository
-        return pricingRuleRepository.findAll().stream()
-                .filter(rule -> rule.getIsActive() != null && rule.getIsActive())
-                .toList();
+        return pricingRuleRepository.findByActiveTrue();
     }
     
     @Override
@@ -38,27 +34,27 @@ public class PricingRuleServiceImpl implements PricingRuleService {
         PricingRule existingRule = pricingRuleRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Pricing rule not found with id: " + id));
         
-        // Update fields - adjust based on your actual PricingRule model
-        if (rule.getName() != null) {
-            existingRule.setName(rule.getName());
+        // Update only non-null fields from the input rule
+        if (rule.getRuleCode() != null) {
+            existingRule.setRuleCode(rule.getRuleCode());
         }
         if (rule.getDescription() != null) {
             existingRule.setDescription(rule.getDescription());
         }
-        if (rule.getRuleType() != null) {
-            existingRule.setRuleType(rule.getRuleType());
+        if (rule.getMinRemainingSeats() != null) {
+            existingRule.setMinRemainingSeats(rule.getMinRemainingSeats());
         }
-        if (rule.getAdjustmentValue() != null) {
-            existingRule.setAdjustmentValue(rule.getAdjustmentValue());
+        if (rule.getMaxRemainingSeats() != null) {
+            existingRule.setMaxRemainingSeats(rule.getMaxRemainingSeats());
         }
-        if (rule.getCondition() != null) {
-            existingRule.setCondition(rule.getCondition());
+        if (rule.getDaysBeforeEvent() != null) {
+            existingRule.setDaysBeforeEvent(rule.getDaysBeforeEvent());
         }
-        if (rule.getIsActive() != null) {
-            existingRule.setIsActive(rule.getIsActive());
+        if (rule.getPriceMultiplier() != null) {
+            existingRule.setPriceMultiplier(rule.getPriceMultiplier());
         }
-        if (rule.getPriority() != null) {
-            existingRule.setPriority(rule.getPriority());
+        if (rule.getActive() != null) {
+            existingRule.setActive(rule.getActive());
         }
         
         return pricingRuleRepository.save(existingRule);
