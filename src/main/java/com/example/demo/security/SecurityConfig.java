@@ -1,44 +1,32 @@
-
-
-
-
 package com.example.demo.security;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.SecurityFilterChain;
 
-public class SecurityUtil {
-
-    public static Long getUserIdFromAuthentication(Object auth) {
-
-        if (auth == null) {
-            return null;
-        }
-
-        if (auth instanceof Long) {
-            return (Long) auth;
-        }
-
-        if (auth instanceof Authentication authentication) {
-            Object principal = authentication.getPrincipal();
-
-            if (principal instanceof Long) {
-                return (Long) principal;
-            }
-
-            if (principal instanceof String) {
-                try {
-                    return Long.parseLong((String) principal);
-                } catch (NumberFormatException e) {
-                    return null;
-                }
-            }
-
-            if (principal instanceof UserDetails) {
-                return null;
-            }
-        }
-
-        return null;
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+    
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(session -> 
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/**").permitAll()  // Allow ALL paths
+                .anyRequest().permitAll()
+            )
+            .headers(headers -> headers
+                .frameOptions(frame -> frame.disable())  // For H2 console
+            )
+            .formLogin(form -> form.disable())  // Disable form login
+            .httpBasic(basic -> basic.disable());  // Disable basic auth
+        
+        return http.build();
     }
 }
