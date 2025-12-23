@@ -24,8 +24,8 @@ public class PriceAdjustmentLog {
     @Column(updatable = false)
     private LocalDateTime changedAt;
 
-    @PrePersist
-    protected void prePersist() {
+    // Change from protected to public
+    public void prePersist() {
         this.changedAt = LocalDateTime.now();
     }
 
@@ -41,6 +41,7 @@ public class PriceAdjustmentLog {
     public String getReason() { return reason; }
     public void setReason(String reason) { this.reason = reason; }
     public LocalDateTime getChangedAt() { return changedAt; }
+    public void setChangedAt(LocalDateTime changedAt) { this.changedAt = changedAt; }
 }
 
 

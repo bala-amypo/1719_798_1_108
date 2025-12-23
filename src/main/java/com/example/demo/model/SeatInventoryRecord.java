@@ -24,14 +24,14 @@ public class SeatInventoryRecord {
 
     private LocalDateTime updatedAt;
 
-    @PrePersist
-    protected void prePersist() {
+    // Change from protected to public
+    public void prePersist() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
 
-    @PreUpdate
-    protected void preUpdate() {
+    // Change from protected to public
+    public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 
@@ -45,7 +45,9 @@ public class SeatInventoryRecord {
     public Integer getRemainingSeats() { return remainingSeats; }
     public void setRemainingSeats(Integer remainingSeats) { this.remainingSeats = remainingSeats; }
     public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
 }
 
 

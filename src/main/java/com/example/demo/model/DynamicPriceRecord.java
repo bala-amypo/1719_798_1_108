@@ -21,8 +21,8 @@ public class DynamicPriceRecord {
     @Column(updatable = false)
     private LocalDateTime computedAt;
 
-    @PrePersist
-    protected void prePersist() {
+    // Change from protected to public
+    public void prePersist() {
         this.computedAt = LocalDateTime.now();
     }
 
@@ -36,8 +36,8 @@ public class DynamicPriceRecord {
     public String getAppliedRuleCodes() { return appliedRuleCodes; }
     public void setAppliedRuleCodes(String appliedRuleCodes) { this.appliedRuleCodes = appliedRuleCodes; }
     public LocalDateTime getComputedAt() { return computedAt; }
+    public void setComputedAt(LocalDateTime computedAt) { this.computedAt = computedAt; }
 }
-
 
 // package com.example.demo.model;
 // import jakarta.persistence.*;
