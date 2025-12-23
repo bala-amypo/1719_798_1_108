@@ -1,32 +1,23 @@
 package com.example.demo.model;
-
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
-
 @Entity
 @Table(name = "dynamic_price_records")
 public class DynamicPriceRecord {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @Column(nullable = false)
     private Long eventId;
-
     @Column(nullable = false)
     private Double computedPrice;
-
     private String appliedRuleCodes;
-
     @Column(updatable = false)
     private LocalDateTime computedAt;
-
     @PrePersist
     protected void prePersist() {
         this.computedAt = LocalDateTime.now();
     }
-
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public Long getEventId() { return eventId; }
