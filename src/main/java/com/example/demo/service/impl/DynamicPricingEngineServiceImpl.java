@@ -52,10 +52,10 @@ public class DynamicPricingEngineServiceImpl implements DynamicPricingEngineServ
       
         List<PricingRule> activeRules = pricingRuleRepository.findByActiveTrue();
         
-        // Calculate days before event
+       
         long daysBeforeEvent = ChronoUnit.DAYS.between(LocalDate.now(), event.getEventDate());
         
-        // Compute dynamic price
+     
         double computedPrice = event.getBasePrice();
         List<String> appliedRules = new ArrayList<>();
         
@@ -76,7 +76,7 @@ public class DynamicPricingEngineServiceImpl implements DynamicPricingEngineServ
             appliedRules.add(rule.getRuleCode());
         }
         
-        // Get previous price
+      
         Double oldPrice = null;
         DynamicPriceRecord previous = dynamicPriceRecordRepository.findFirstByEventIdOrderByComputedAtDesc(eventId)
                 .orElse(null);
@@ -84,8 +84,7 @@ public class DynamicPricingEngineServiceImpl implements DynamicPricingEngineServ
         if (previous != null) {
             oldPrice = previous.getComputedPrice();
         }
-        
-        // Create new dynamic price record
+      
         DynamicPriceRecord dynamicPrice = new DynamicPriceRecord();
         dynamicPrice.setEventId(eventId);
         dynamicPrice.setComputedPrice(computedPrice);
@@ -93,7 +92,7 @@ public class DynamicPricingEngineServiceImpl implements DynamicPricingEngineServ
         
         DynamicPriceRecord saved = dynamicPriceRecordRepository.save(dynamicPrice);
         
-        // Log price adjustment if price changed
+    
         if (oldPrice != null && Math.abs(oldPrice - computedPrice) > 0.01) {
             PriceAdjustmentLog log = new PriceAdjustmentLog();
             log.setEventId(eventId);
