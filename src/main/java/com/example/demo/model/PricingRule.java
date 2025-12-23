@@ -1,24 +1,32 @@
 package com.example.demo.model;
+
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "pricing_rules")
 public class PricingRule {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     @Column(unique = true, nullable = false)
     private String ruleCode;
+
     private String description;
     private Integer minRemainingSeats;
     private Integer maxRemainingSeats;
     private Integer daysBeforeEvent;
     private Double priceMultiplier;
+
     @Column(nullable = false)
     private Boolean active = true;
+
     @Column(updatable = false)
     private LocalDateTime createdAt;
+
     private LocalDateTime updatedAt;
+
     @PrePersist
     protected void prePersist() {
         this.createdAt = LocalDateTime.now();
@@ -27,10 +35,13 @@ public class PricingRule {
             this.active = true;
         }
     }
+
     @PreUpdate
     protected void preUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
+
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getRuleCode() { return ruleCode; }
@@ -50,3 +61,58 @@ public class PricingRule {
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
 }
+
+
+
+// package com.example.demo.model;
+// import jakarta.persistence.*;
+// import java.time.LocalDateTime;
+// @Entity
+// @Table(name = "pricing_rules")
+// public class PricingRule {
+//     @Id
+//     @GeneratedValue(strategy = GenerationType.IDENTITY)
+//     private Long id;
+//     @Column(unique = true, nullable = false)
+//     private String ruleCode;
+//     private String description;
+//     private Integer minRemainingSeats;
+//     private Integer maxRemainingSeats;
+//     private Integer daysBeforeEvent;
+//     private Double priceMultiplier;
+//     @Column(nullable = false)
+//     private Boolean active = true;
+//     @Column(updatable = false)
+//     private LocalDateTime createdAt;
+//     private LocalDateTime updatedAt;
+//     @PrePersist
+//     protected void prePersist() {
+//         this.createdAt = LocalDateTime.now();
+//         this.updatedAt = LocalDateTime.now();
+//         if (this.active == null) {
+//             this.active = true;
+//         }
+//     }
+//     @PreUpdate
+//     protected void preUpdate() {
+//         this.updatedAt = LocalDateTime.now();
+//     }
+//     public Long getId() { return id; }
+//     public void setId(Long id) { this.id = id; }
+//     public String getRuleCode() { return ruleCode; }
+//     public void setRuleCode(String ruleCode) { this.ruleCode = ruleCode; }
+//     public String getDescription() { return description; }
+//     public void setDescription(String description) { this.description = description; }
+//     public Integer getMinRemainingSeats() { return minRemainingSeats; }
+//     public void setMinRemainingSeats(Integer minRemainingSeats) { this.minRemainingSeats = minRemainingSeats; }
+//     public Integer getMaxRemainingSeats() { return maxRemainingSeats; }
+//     public void setMaxRemainingSeats(Integer maxRemainingSeats) { this.maxRemainingSeats = maxRemainingSeats; }
+//     public Integer getDaysBeforeEvent() { return daysBeforeEvent; }
+//     public void setDaysBeforeEvent(Integer daysBeforeEvent) { this.daysBeforeEvent = daysBeforeEvent; }
+//     public Double getPriceMultiplier() { return priceMultiplier; }
+//     public void setPriceMultiplier(Double priceMultiplier) { this.priceMultiplier = priceMultiplier; }
+//     public Boolean getActive() { return active; }
+//     public void setActive(Boolean active) { this.active = active; }
+//     public LocalDateTime getCreatedAt() { return createdAt; }
+//     public LocalDateTime getUpdatedAt() { return updatedAt; }
+// }
