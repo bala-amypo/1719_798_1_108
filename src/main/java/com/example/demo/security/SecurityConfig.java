@@ -9,7 +9,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
-import com.example.OneToMany.security.JwtFilter;
+import com.example.demo.security.JwtFilter; // Fixed import
 
 @Configuration
 @EnableMethodSecurity
@@ -45,8 +45,6 @@ public class SecurityConfig {
         return http.build();
     }
 }
-
-
 
 
 // package com.example.demo.security;
