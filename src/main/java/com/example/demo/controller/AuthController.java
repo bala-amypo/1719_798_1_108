@@ -1,36 +1,121 @@
-// package com.example.demo.controller;
+package com.example.demo.controller;
 
+import com.example.demo.security.CustomUserDetailsService;
+import com.example.demo.security.JwtTokenProvider;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/auth")
+@Tag(name = "Authentication", description = "Authentication endpoints")
+public class AuthController {
+
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final CustomUserDetailsService userDetailsService;
+
+    public AuthController(AuthenticationManager authenticationManager,
+                         JwtTokenProvider jwtTokenProvider,
+                         CustomUserDetailsService userDetailsService) {
+        this.authenticationManager = authenticationManager;
+        this.jwtTokenProvider = jwtTokenProvider;
+        this.userDetailsService = userDetailsService;
+    }
+
+    @PostMapping("/login")
+    @Operation(summary = "Login user", description = "Authenticate user and return JWT token")
+    public ResponseEntity<Map<String, String>> login(@RequestBody LoginRequest loginRequest) {
+        Authentication authentication = authenticationManager.authenticate(
+            new UsernamePasswordAuthenticationToken(
+                loginRequest.getEmail(),
+                loginRequest.getPassword()
+            )
+        );
+        
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        Map<String, Object> userData = userDetailsService.getUserData(userDetails.getUsername());
+        
+        String token = jwtTokenProvider.generateToken(
+            authentication,
+            (Long) userData.get("userId"),
+            (String) userData.get("role")
+        );
+        
+        Map<String, String> response = new HashMap<>();
+        response.put("token", token);
+        response.put("email", userDetails.getUsername());
+        response.put("role", (String) userData.get("role"));
+        
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/register")
+    @Operation(summary = "Register new user", description = "Register a new user account")
+    public ResponseEntity<Map<String, Object>> register(@RequestBody RegisterRequest registerRequest) {
+        Map<String, Object> user = userDetailsService.registerUser(
+            registerRequest.getName(),
+            registerRequest.getEmail(),
+            registerRequest.getPassword(),
+            registerRequest.getRole()
+        );
+        
+        return ResponseEntity.ok(user);
+    }
+    
+    // Request DTOs
+    static class LoginRequest {
+        private String email;
+        private String password;
+        
+        // Getters and setters
+        public String getEmail() { return email; }
+        public void setEmail(String email) { this.email = email; }
+        public String getPassword() { return password; }
+        public void setPassword(String password) { this.password = password; }
+    }
+    
+    static class RegisterRequest {
+        private String name;
+        private String email;
+        private String password;
+        private String role = "USER";
+        
+        // Getters and setters
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
+        public String getEmail() { return email; }
+        public void setEmail(String email) { this.email = email; }
+        public String getPassword() { return password; }
+        public void setPassword(String password) { this.password = password; }
+        public String getRole() { return role; }
+        public void setRole(String role) { this.role = role; }
+    }
+}
+
+
+
+// package com.example.demo.controller;
 // import com.example.demo.model.User;
-// import com.example.demo.security.JwtTokenProvider;
 // import com.example.demo.service.UserService;
 // import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.http.ResponseEntity;
-// import org.springframework.security.authentication.AuthenticationManager;
-// import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-// import org.springframework.security.core.Authentication;
-// import org.springframework.security.core.context.SecurityContextHolder;
-// import org.springframework.security.crypto.password.PasswordEncoder;
 // import org.springframework.web.bind.annotation.*;
-
 // import java.util.HashMap;
 // import java.util.Map;
-
 // @RestController
 // @RequestMapping("/auth")
 // public class AuthController {
-    
 //     @Autowired
 //     private UserService userService;
-    
-//     @Autowired
-//     private PasswordEncoder passwordEncoder;
-    
-//     @Autowired
-//     private AuthenticationManager authenticationManager;
-    
-//     @Autowired
-//     private JwtTokenProvider jwtTokenProvider;
-    
 //     @PostMapping("/register")
 //     public ResponseEntity<?> register(@RequestBody User user) {
 //         if (userService.existsByEmail(user.getEmail())) {
@@ -38,143 +123,28 @@
 //             response.put("error", "Email already exists");
 //             return ResponseEntity.badRequest().body(response);
 //         }
-        
-//         // Encode password before saving
-//         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        
-//         // Set default role if not provided
-//         if (user.getRole() == null || user.getRole().isEmpty()) {
-//             user.setRole("USER");
-//         }
-        
 //         User savedUser = userService.save(user);
-        
-//         Map<String, Object> response = new HashMap<>();
+//         Map<String, String> response = new HashMap<>();
 //         response.put("message", "User registered successfully");
-//         response.put("userId", savedUser.getId());
-//         response.put("email", savedUser.getEmail());
-//         response.put("role", savedUser.getRole());
-        
+//         response.put("userId", savedUser.getId().toString());
 //         return ResponseEntity.ok(response);
 //     }
-    
 //     @PostMapping("/login")
 //     public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
 //         String email = credentials.get("email");
 //         String password = credentials.get("password");
         
-//         try {
-//             Authentication authentication = authenticationManager.authenticate(
-//                 new UsernamePasswordAuthenticationToken(email, password)
-//             );
-            
-//             SecurityContextHolder.getContext().setAuthentication(authentication);
-            
-//             User user = userService.findByEmail(email);
-            
-//             // Generate JWT token
-//             String token = jwtTokenProvider.generateToken(authentication, user.getId(), user.getRole());
-            
-//             Map<String, Object> response = new HashMap<>();
-//             response.put("message", "Login successful");
-//             response.put("token", token);
-//             response.put("userId", user.getId());
-//             response.put("email", user.getEmail());
-//             response.put("role", user.getRole());
-//             response.put("fullName", user.getFullName());
-            
-//             return ResponseEntity.ok(response);
-            
-//         } catch (Exception e) {
+//         User user = userService.findByEmail(email);
+        
+//         if (user == null || !user.getPassword().equals(password)) {
 //             Map<String, String> response = new HashMap<>();
 //             response.put("error", "Invalid email or password");
 //             return ResponseEntity.badRequest().body(response);
 //         }
-//     }
-    
-//     @GetMapping("/profile")
-//     public ResponseEntity<?> getProfile() {
-//         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-//         String email = authentication.getName();
-        
-//         User user = userService.findByEmail(email);
-//         if (user == null) {
-//             return ResponseEntity.notFound().build();
-//         }
-        
-//         Map<String, Object> response = new HashMap<>();
-//         response.put("userId", user.getId());
-//         response.put("email", user.getEmail());
-//         response.put("fullName", user.getFullName());
+//         Map<String, String> response = new HashMap<>();
+//         response.put("message", "Login successful");
+//         response.put("userId", user.getId().toString());
 //         response.put("role", user.getRole());
-//         response.put("createdAt", user.getCreatedAt());
-        
-//         return ResponseEntity.ok(response);
-//     }
-    
-//     @GetMapping("/validate-token")
-//     public ResponseEntity<?> validateToken(@RequestHeader("Authorization") String authHeader) {
-//         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
-//             return ResponseEntity.badRequest().body(Map.of("valid", false, "error", "Invalid token format"));
-//         }
-        
-//         String token = authHeader.substring(7);
-//         boolean isValid = jwtTokenProvider.validateToken(token);
-        
-//         Map<String, Object> response = new HashMap<>();
-//         response.put("valid", isValid);
-        
-//         if (isValid) {
-//             Map<String, Object> claims = jwtTokenProvider.getAllClaims(token);
-//             response.put("claims", claims);
-//         }
-        
 //         return ResponseEntity.ok(response);
 //     }
 // }
-
-package com.example.demo.controller;
-import com.example.demo.model.User;
-import com.example.demo.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import java.util.HashMap;
-import java.util.Map;
-@RestController
-@RequestMapping("/auth")
-public class AuthController {
-    @Autowired
-    private UserService userService;
-    @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody User user) {
-        if (userService.existsByEmail(user.getEmail())) {
-            Map<String, String> response = new HashMap<>();
-            response.put("error", "Email already exists");
-            return ResponseEntity.badRequest().body(response);
-        }
-        User savedUser = userService.save(user);
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "User registered successfully");
-        response.put("userId", savedUser.getId().toString());
-        return ResponseEntity.ok(response);
-    }
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody Map<String, String> credentials) {
-        String email = credentials.get("email");
-        String password = credentials.get("password");
-        
-        User user = userService.findByEmail(email);
-        
-        if (user == null || !user.getPassword().equals(password)) {
-            Map<String, String> response = new HashMap<>();
-            response.put("error", "Invalid email or password");
-            return ResponseEntity.badRequest().body(response);
-        }
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "Login successful");
-        response.put("userId", user.getId().toString());
-        response.put("role", user.getRole());
-        return ResponseEntity.ok(response);
-    }
-}
