@@ -24,18 +24,15 @@ public class SeatInventoryRecord {
 
     private LocalDateTime updatedAt;
 
-    // Change from protected to public
     public void prePersist() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
 
-    // Change from protected to public
     public void preUpdate() {
         this.updatedAt = LocalDateTime.now();
     }
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public Long getEventId() { return eventId; }

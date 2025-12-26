@@ -21,12 +21,10 @@ public class DynamicPriceRecord {
     @Column(updatable = false)
     private LocalDateTime computedAt;
 
-    // Change from protected to public
     public void prePersist() {
         this.computedAt = LocalDateTime.now();
     }
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public Long getEventId() { return eventId; }

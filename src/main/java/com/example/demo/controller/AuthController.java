@@ -41,7 +41,6 @@ public class AuthController {
     @Operation(summary = "Login user", description = "Authenticate user and return JWT token")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
         try {
-            // Authenticate user
             Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                     loginRequest.getEmail(),
@@ -49,10 +48,8 @@ public class AuthController {
                 )
             );
             
-            // Get user details
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
             
-            // Extract role from authorities
             String role = userDetails.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .filter(auth -> auth.startsWith("ROLE_"))
@@ -60,10 +57,9 @@ public class AuthController {
                     .findFirst()
                     .orElse("USER");
             
-            // Generate token
             String token = jwtTokenProvider.generateToken(
                 authentication,
-                1L, // Default userId - you might want to get actual user ID
+                1L, 
                 role
             );
             
@@ -87,10 +83,8 @@ public class AuthController {
     @Operation(summary = "Register new user", description = "Register a new user account")
     public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
         try {
-            // Encode password
             String encodedPassword = passwordEncoder.encode(registerRequest.getPassword());
             
-            // Register user
             Map<String, Object> user = userDetailsService.registerUser(
                 registerRequest.getName(),
                 registerRequest.getEmail(),
@@ -98,7 +92,6 @@ public class AuthController {
                 registerRequest.getRole()
             );
             
-            // Generate token for newly registered user
             Authentication authentication = new UsernamePasswordAuthenticationToken(
                 registerRequest.getEmail(),
                 registerRequest.getPassword()
@@ -123,7 +116,6 @@ public class AuthController {
         }
     }
     
-    // Request DTOs
     public static class LoginRequest {
         private String email;
         private String password;

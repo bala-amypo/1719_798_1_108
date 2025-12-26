@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/events")
 @Tag(name = "Events", description = "Event management endpoints")
-@SecurityRequirement(name = "bearerAuth") // This adds the lock icon in Swagger
+@SecurityRequirement(name = "bearerAuth") 
 public class EventRecordController {
     
     private final EventRecordService eventRecordService;

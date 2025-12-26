@@ -24,12 +24,10 @@ public class PriceAdjustmentLog {
     @Column(updatable = false)
     private LocalDateTime changedAt;
 
-    // Change from protected to public
     public void prePersist() {
         this.changedAt = LocalDateTime.now();
     }
 
-    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public Long getEventId() { return eventId; }
