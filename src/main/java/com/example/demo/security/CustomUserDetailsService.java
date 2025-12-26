@@ -2,7 +2,6 @@ package com.example.demo.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -60,7 +59,8 @@ public class CustomUserDetailsService implements UserDetailsService {
                     new SimpleGrantedAuthority("ROLE_" + userData.get("role"))
             );
             
-            return new User(
+            // Use fully qualified name for Spring Security User class
+            return new org.springframework.security.core.userdetails.User(
                     username,
                     (String) userData.get("password"),
                     authorities
@@ -74,7 +74,8 @@ public class CustomUserDetailsService implements UserDetailsService {
                     new SimpleGrantedAuthority("ROLE_" + dbUser.getRole())
             );
             
-            return new User(
+            // Use fully qualified name for Spring Security User class
+            return new org.springframework.security.core.userdetails.User(
                     dbUser.getEmail(),
                     dbUser.getPassword(),
                     authorities
@@ -84,7 +85,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         throw new UsernameNotFoundException("User not found with username: " + username);
     }
 }
-
 
 // package com.example.demo.security;
 
