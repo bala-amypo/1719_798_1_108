@@ -20,7 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     
     public CustomUserDetailsService() {
-        // Initialize with some default users
+        
         registerUser("Admin User", "admin@example.com", 
                     encoder.encode("admin123"), "ADMIN");
         registerUser("Event Manager", "manager@example.com", 

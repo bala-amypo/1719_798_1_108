@@ -70,7 +70,7 @@ public class JwtTokenProvider {
                 return claims;
             }
             
-            // Extract the middle part
+            
             String[] parts = token.split("\\.");
             if (parts.length < 2) {
                 return claims;
@@ -94,7 +94,7 @@ public class JwtTokenProvider {
             }
             
         } catch (Exception e) {
-            // Return empty claims map
+            
         }
         
         return claims;
