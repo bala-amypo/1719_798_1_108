@@ -8,8 +8,6 @@ import java.util.Map;
 public class JwtTokenProvider {
     private final String secretKey;
     private final long validityInMilliseconds;
-    
-    
     public JwtTokenProvider() {
         this.secretKey = Base64.getEncoder().encodeToString(
             "VerySecretKeyForJwtDemoApplication123456".getBytes()
